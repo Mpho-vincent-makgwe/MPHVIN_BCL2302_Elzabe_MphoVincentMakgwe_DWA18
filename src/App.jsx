@@ -1,4 +1,4 @@
-import Podcast from '../components/Podcasts'
+import Podcast from '../src/components/Podcasts'
 import './App.css'
 
 function App() {

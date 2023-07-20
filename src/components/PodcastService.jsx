@@ -9,15 +9,20 @@ try {
 }
 };
 
-const fetchPodcastById = async (id) => {
+const fetchPodcastById = async ({ show }) => {
 try {
-    const response = await fetch(`https://podcast-api.netlify.app/id/${id}`);
+    const response = await fetch('https://podcast-api.netlify.app/shows');
     const data = await response.json();
-    return data;
+    const podcast = data.map((podcast) => podcast.id);
+
+    return podcast;
 } catch (error) {
-    console.error(`Error fetching podcast with ID ${id}:`, error);
+    console.error(`Error fetching podcast with ID ${show.id}:`, error);
     return null;
 }
 };
+
+
+
 
 export { fetchPodcasts, fetchPodcastById };

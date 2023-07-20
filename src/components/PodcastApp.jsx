@@ -1,5 +1,5 @@
 // PodcastApp.jsx
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchPodcasts, fetchPodcastById } from './PodcastService';
 import PodcastShow from './PodcastShows'; // Import the PodcastShow component
 
