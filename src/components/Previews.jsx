@@ -7,7 +7,7 @@ import PodcastShow from './PodcastShows';
 
 
 export default function Preview() {
-    const [isOverlayVisible, setIsOverlayVisible] = useState(true);
+    const [isOverlayVisible, setIsOverlayVisible] = useState(false);
     const [shows, setShows] = useState([]);
     const [maxLength, setMaxLength] = useState({});
     const [ ,setSelectedPodcastId] = useState(null);
@@ -23,24 +23,16 @@ useEffect(() => {
         .catch((error) => console.log(error));
     }, []);
 
-const handlePodcastClick = async (showId) => {
-    try {
-        const podcastData = await fetchPodcastById({ show: { id: showId } });
-        setSelectedPodcast(podcastData);
-        setIsOverlayVisible(true); // Show the overlay when a podcast is clicked
-    } catch (error) {
-        console.log('Error fetching podcast details:', error);
-    }
-    };
 
 
 
-const truncateDescription = (description, maxLength) => {
-if (description.length <= maxLength) {
-    return description;
-}
-return description.slice(0, maxLength) + '...';
-};
+
+// const truncateDescription = (description, maxLength) => {
+// if (description.length <= maxLength) {
+//     return description;
+// }
+// return description.slice(0, maxLength) + '...';
+// };
 
 const toggleDescription = (showId) => {
 setMaxLength(prevMaxLength => ({
@@ -49,6 +41,19 @@ setMaxLength(prevMaxLength => ({
 }));
 };
 
+const handlePodcastClick = async (event) => {
+    try {
+        toggleDescription();
+        const podcastData = await fetchPodcastById({ show: { id: event } });
+        console.log(event);
+        setSelectedPodcast(podcastData);
+        setIsOverlayVisible(true); // Show the overlay when a podcast is clicked
+    } catch (error) {
+        console.log('Error fetching podcast details:', error);
+    }
+
+    
+    };
 
 
 const handlePodcastPlayerClose = () => {
@@ -79,12 +84,12 @@ return (
         <p>{new Date(show.updated).toLocaleDateString()}</p>
         <p></p>
 
-        <p>
+        {/* <p>
             {maxLength[show.id]
             ? show.description
             : truncateDescription(show.description, 25)}
-        </p>
-        <button onClick={() => toggleDescription(show.id)}>
+        </p> */}
+        <button onClick={() => handlePodcastClick(show.id)}>
             {maxLength[show.id] ? 'Read Less' : 'Read More'}
         </button>
         </div>
