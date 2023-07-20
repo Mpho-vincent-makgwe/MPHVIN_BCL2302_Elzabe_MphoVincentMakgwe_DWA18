@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { fetchPodcasts, fetchPodcastById } from './PodcastService';
 import '../styles/Podcasts.css'
 import Login from './LoginAndRegister';
 import Preview from './Previews';
