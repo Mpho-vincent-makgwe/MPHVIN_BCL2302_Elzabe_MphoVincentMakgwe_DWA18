@@ -1,4 +1,4 @@
-/* PodcastShow.css */
+/*PodcastShow.css*/
 
 .podcast-overlay {
     position: fixed;
@@ -10,10 +10,11 @@
     justify-content: center;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.5);
+    
   }
   
   .podcast-details {
-    background-color: #fff;
+    background-color: #1e6971;
     padding: 20px;
     border-radius: 8px;
     max-width: 90%;
@@ -34,4 +35,36 @@
   .close-button:hover {
     color: red;
   }
-  
+   
+
+.podcast-img{
+    border-radius: 20%;
+    width: 100px;
+    height: 100px;
+}
+
+
+.grid-table {
+  display: grid;
+  grid-template-columns: 2fr; /* Adjust the column sizes as needed */
+  gap: 10px; /* Adjust the gap between rows and columns as needed */
+}
+
+.grid-table-header {
+  /* Add your styles for the header row */
+  font-weight: bold;
+  display: grid;
+  grid-template-columns: 2fr; /* Match the column sizes with the grid-table */
+  gap: 5px; /* Match the gap with the grid-table */
+}
+
+.grid-table-row {
+  /* Add your styles for each row */
+  display: grid;
+  grid-template-columns: 2fr ; /* Match the column sizes with the grid-table */
+  gap: 10px; /* Match the gap with the grid-table */
+}
+
+.audio-player {
+  /* Add your styles for the audio player */
+}

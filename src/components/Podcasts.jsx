@@ -1,5 +1,6 @@
-import '../styles/Podcasts.css'
+
 import Preview from './Previews';
+
 
 const Podcast = () => {
 

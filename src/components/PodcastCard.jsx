@@ -1,4 +1,7 @@
 
+import '../styles/PodcastCard.css'; 
+
+
 const PodcastCard = ({ img, title, onClick }) => {
   return (
     <div className="podcast-card" onClick={onClick}>
