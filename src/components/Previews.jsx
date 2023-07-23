@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(3),
   },
   showsGrid: {
-    display: '',
-    gridTemplateRows: 'repeat(4, 1fr)', // Four cards per row
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 2fr)', // Four cards per row
     gap: theme.spacing(4), // Gap between cards
   },
   show: {
@@ -158,6 +158,7 @@ const Preview = () => {
               />
 
               <p>Seasons: {show.seasons}</p>
+              <p>Pricing: {show.pricing}</p>
               
               <p >Genres:{(show.genres.map((genre)=>genre)).join(', ')}</p>
               <p>{new Date(show.updated).toLocaleDateString()}</p>
@@ -166,13 +167,19 @@ const Preview = () => {
                   ? show.description
                   : `${show.description.split(' ').slice(0, maxLength).join(' ')}...`}
               </p>
+              <p>Rating: {show.pricing}</p>
               {show.description.split(' ').length > maxLength && (
                 <button onClick={() => toggleDescription(show.id)}>
                   {selectedShowData[show.id]?.descriptionExpanded ? 'Show Less' : 'Show More'}
                 </button>
               )}
+<input 
+                name="isFavourite"
+                type="checkbox" 
+                id="isFavourite" 
 
-        
+            />
+            <label htmlFor="isFavourite">Favourite</label>
             </div>
           ))}
         </main>

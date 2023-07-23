@@ -9,12 +9,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(30, 1, 30, 0.5);
     
   }
   
   .podcast-details {
-    background-color: #1e6971;
+    background-color: #01171a;
     padding: 20px;
     border-radius: 8px;
     max-width: 90%;
@@ -46,25 +46,27 @@
 
 .grid-table {
   display: grid;
-  grid-template-columns: 2fr; /* Adjust the column sizes as needed */
-  gap: 10px; /* Adjust the gap between rows and columns as needed */
+  grid-template-columns: 2fr;
+  gap: 10px;
 }
 
 .grid-table-header {
-  /* Add your styles for the header row */
   font-weight: bold;
   display: grid;
-  grid-template-columns: 2fr; /* Match the column sizes with the grid-table */
-  gap: 5px; /* Match the gap with the grid-table */
+  grid-template-columns: 2fr; 
+  gap: 5px;
 }
 
 .grid-table-row {
-  /* Add your styles for each row */
   display: grid;
-  grid-template-columns: 2fr ; /* Match the column sizes with the grid-table */
-  gap: 10px; /* Match the gap with the grid-table */
+  grid-template-columns: 2fr ;
+  gap: 10px;
 }
-
-.audio-player {
-  /* Add your styles for the audio player */
+.description {
+  /* Add your styles for the episode and season descriptions */
+  margin-bottom: 2px;
+  background-color: '#f0f0f0';
+  border-radius: 8;
+  padding: 2px;
+  box-shadow: '0 2px 4px rgba(0, 0, 0, 0.2)';
 }
