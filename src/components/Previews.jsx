@@ -1,72 +1,13 @@
 import  { useEffect, useState } from 'react';
 import PodcastCard from './PodcastCard'; 
-import { fetchPodcasts, fetchPodcastById } from '../Services/PodcastService'
+import { fetchPodcasts, fetchPodcastById } from '../services/PodcastService'
 import Episode from './Episode';
 import Header from './Header'; 
 import PodcastShow from './PodcastShows';
-import { ThemeProvider, createMuiTheme, makeStyles } from '@material-ui/core/styles';
-
-
-
-
-const theme = createMuiTheme();
-const useStyles = makeStyles((theme) => ({
-  root: {},
-  podcastContainer: {
-    padding: theme.spacing(3),
-  },
-  header: {
-    textAlign: 'center',
-    margin: theme.spacing(3),
-  },
-  loading: {
-    textAlign: 'center',
-    margin: theme.spacing(3),
-  },
-  showsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 2fr)', // Four cards per row
-    gap: theme.spacing(4), // Gap between cards
-  },
-  show: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    padding: theme.spacing(2),
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadius,
-    boxShadow: theme.shadows[2],
-    transition: 'box-shadow 0.3s ease-in-out',
-    cursor: 'pointer',
-    color: 'black',
-    '& img': {
-      width: '100% auto',
-      height: '100% auto',
-      marginBottom: theme.spacing(2),
-      borderRadius: theme.shape.borderRadius,
-    },
-    '&:hover': {
-      boxShadow: theme.shadows[4],
-    },
-  },
-  genres: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2),
-  },
-  description: {
-    marginBottom: theme.spacing(2),
-  },
-  showMoreBtn: {
-    marginBottom: theme.spacing(2),
-  },
-}));
-
 
 
 const Preview = () => {
-  const classes = useStyles();
+
 
   const [loading, setLoading] = useState(true);
   const [shows, setShows] = useState([]);
@@ -133,11 +74,10 @@ const Preview = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
+    // < theme={theme}>
     <div key={shows.id} className="podcast-container">
-      <Header />
-        {/* <h1 className={classes.header}>Podcast And Relax</h1>
-      </Header> */}
+      
+<Header />
       {loading ? (
         <section>
           <p className={classes.loading}>Loading...</p>
@@ -212,7 +152,6 @@ const Preview = () => {
           )
         )}
     </div>
-    </ThemeProvider>
   );
 };
 export default Preview;
