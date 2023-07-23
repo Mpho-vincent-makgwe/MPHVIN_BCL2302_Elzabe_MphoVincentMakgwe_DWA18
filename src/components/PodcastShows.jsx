@@ -1,7 +1,8 @@
+import { build } from 'vite';
 import '../styles/PodcastShow.css'
 import  { useState } from 'react';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+
+
 
 const PodcastShow = ({ podcast, onClose, onPlay }) => {
 
@@ -34,19 +35,19 @@ return (
         ))}
       </ul>
     ) : (
-      <Typography variant="body1">No genres available.</Typography>
+      <p>No genres available.</p>
     )}
 
     <div className="grid-table">
       <div className="grid-table-header">
-        <Typography variant="body1">Seasons</Typography>
+        <p>Seasons</p>
         
       </div>
       {seasons.map((season, index) => (
         <div key={index} className="grid-table-row">
           <span >Season {index + 1}</span>
               <p className="description">{season.description}</p>
-          <Typography variant="body1">Episodes</Typography>
+          <p>Episodes</p>
           <ul>
             {season.episodes.map((episode) => (
               <li key={episode.id}>
@@ -54,7 +55,7 @@ return (
 
             
 
-                <Button onClick={() => handlePlayEpisode(episode)}>Play</Button>
+                <button onClick={() => handlePlayEpisode(episode)}>Play</button>
               <p className="description">{episode.description}</p>
 
 
@@ -70,16 +71,16 @@ return (
 
     </div>
 
-    <Typography variant="body1">
+    <p>
       Last Updated: {new Date(updated).toLocaleDateString()}
-    </Typography>
-    <Typography variant="body1">Rating: {rating}</Typography>
-    <Typography variant="body1">Review Count: {reviewCount}</Typography>
+    </p>
+    <p>Rating: {rating}</p>
+    <p>Review Count: {reviewCount}</p>
 
     {/* Audio player to play the selected episode */}
     {selectedEpisode && (
       <div className="audio-player">
-        <Typography variant="h3">Now Playing: {selectedEpisode.title}</Typography>
+        <span> Playing: {selectedEpisode.title}</span>
         {/* Add your audio player component here */}
         <audio controls>
           <source src={selectedEpisode.audioUrl} type="audio/mpeg" />

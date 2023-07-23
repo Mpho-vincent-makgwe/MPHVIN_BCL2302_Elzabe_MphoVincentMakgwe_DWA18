@@ -1,6 +1,4 @@
 // Episode.js
-import React from 'react';
-
 const Episode = ({ episode, onPlay }) => {
   return (
     <div className="episode">

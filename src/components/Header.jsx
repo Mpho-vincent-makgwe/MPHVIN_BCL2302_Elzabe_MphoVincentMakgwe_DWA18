@@ -1,5 +1,3 @@
-import React from 'react';
-
 const headerStyles = {
   display: 'flex',
   alignItems: 'center',

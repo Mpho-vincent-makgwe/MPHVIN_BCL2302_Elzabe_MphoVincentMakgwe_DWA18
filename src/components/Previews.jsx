@@ -1,8 +1,8 @@
 import  { useEffect, useState } from 'react';
 import PodcastCard from './PodcastCard'; 
 import { fetchPodcasts, fetchPodcastById } from '../services/PodcastService'
-import Episode from './Episode';
 import Header from './Header'; 
+import Episode from './Episode'; 
 import PodcastShow from './PodcastShows';
 
 
@@ -80,12 +80,12 @@ const Preview = () => {
 <Header />
       {loading ? (
         <section>
-          <p className={classes.loading}>Loading...</p>
+          <p className="">Loading...</p>
         </section>
       ) : (
-        <main className={classes.showsGrid}>
+        <main className="">
           {shows.map((show) => (
-            <div className={classes.show} key={show.id}>
+            <div className="" key={show.id}>
               <PodcastCard
                 id={show.id}
                 img={show.image}
