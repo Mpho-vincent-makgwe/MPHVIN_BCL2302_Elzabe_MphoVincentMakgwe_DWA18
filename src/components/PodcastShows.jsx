@@ -1,19 +1,29 @@
-import { build } from 'vite';
 import '../styles/PodcastShow.css'
 import  { useState } from 'react';
-
+import Episode from './Episode';
 
 
 const PodcastShow = ({ podcast, onClose, onPlay }) => {
 
 const [selectedEpisode, setSelectedEpisode] = useState(null);
 const { title, image, description, genres, seasons, updated, rating, reviewCount, episode } = podcast;
+const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
+const [showDescriptions, setShowDescriptions] = useState({});
 
 if (!podcast) {
 return null;
 }
 
+const toggleSeasonDescription = (seasonIndex) => {
+  setShowDescriptions((prevShowDescriptions) => ({
+    ...prevShowDescriptions,
+    [seasonIndex]: !prevShowDescriptions[seasonIndex],
+  }));
+};
 
+const handleSeasonChange = (seasonIndex) => {
+  setSelectedSeasonIndex(seasonIndex);
+};
 const handlePlayEpisode = (episode) => {
 setSelectedEpisode(episode);
 };
@@ -40,43 +50,34 @@ return (
 
     <div className="grid-table">
       <div className="grid-table-header">
-        <p>Seasons</p>
+
         
       </div>
       {seasons.map((season, index) => (
         <div key={index} className="grid-table-row">
-          <span >Season {index + 1}</span>
-              <p className="description">{season.description}</p>
-          <p>Episodes</p>
-          <ul>
-            {season.episodes.map((episode) => (
-              <li key={episode.id}>
-                <span name="episode">{episode.title}</span>
 
-            
-
-                <button onClick={() => handlePlayEpisode(episode)}>Play</button>
-              <p className="description">{episode.description}</p>
-
-
-              </li>
-              
-            ))}
-            
-          </ul>
-          
-        </div>
-
-      ))}
-
+<button className="season-buttons" key={index} onClick={() => toggleSeasonDescription(index)}>
+                Season {index + 1}
+              </button>
+              {showDescriptions[index] && (
+                <div className="episode-list">
+                  <ol>
+                    {season.episodes.map((episode) => (
+                      <li key={episode.id}>
+                        <Episode key={episode.id} episode={episode} onPlay={handlePlayEpisode} />
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+            </div>
+          ))}
     </div>
-
     <p>
       Last Updated: {new Date(updated).toLocaleDateString()}
     </p>
     <p>Rating: {rating}</p>
     <p>Review Count: {reviewCount}</p>
-
     {/* Audio player to play the selected episode */}
     {selectedEpisode && (
       <div className="audio-player">

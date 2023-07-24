@@ -1,10 +1,12 @@
+import '../styles/header.css'
+
 const headerStyles = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  backgroundColor: '#2196f3',
+  backgroundColor: '#2196f6',
   color: '#fff',
-  padding: '1rem',
+  padding: '10px',
 };
 
 const menuButtonStyles = {
@@ -13,8 +15,8 @@ const menuButtonStyles = {
 
 const Header = () => {
   return (
-    <div style={headerStyles}>
-      <div style={menuButtonStyles}>
+    <div className='header' style={headerStyles}>
+      <div  style={menuButtonStyles}>
         {/* You can add your menu button icon here */}
         <svg
           xmlns="http://www.w3.org/2000/svg"

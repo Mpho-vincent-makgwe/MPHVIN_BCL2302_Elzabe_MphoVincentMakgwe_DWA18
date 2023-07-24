@@ -2,8 +2,8 @@ import  { useEffect, useState } from 'react';
 import PodcastCard from './PodcastCard'; 
 import { fetchPodcasts, fetchPodcastById } from '../services/PodcastService'
 import Header from './Header'; 
-import Episode from './Episode'; 
 import PodcastShow from './PodcastShows';
+import '../styles/Preview.css';
 
 
 const Preview = () => {
@@ -12,7 +12,7 @@ const Preview = () => {
   const [loading, setLoading] = useState(true);
   const [shows, setShows] = useState([]);
   const [selectedShow, setSelectedShow] = useState(null);
-  const [selectedSeason, setSelectedSeason] = useState(0);
+  const [, setSelectedSeason] = useState(0);
   const [selectedShowData, setSelectedShowData] = useState({});
   const [maxLength] = useState(4);
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
@@ -75,17 +75,29 @@ const Preview = () => {
 
   return (
     // < theme={theme}>
-    <div key={shows.id} className="podcast-container">
-      
-<Header />
+    
+    <div className="podcast-card"key={shows.id} >
+      <Header className="header" />
+
       {loading ? (
+        
         <section>
-          <p className="">Loading...</p>
+          <div className="loading-container">
+          <div className="loading-spinner"></div>
+          </div>
+          
         </section>
       ) : (
-        <main className="">
+        
+        <main 
+        className="podcast-container-main" key={shows.id}
+        >
+
+
           {shows.map((show) => (
-            <div className="" key={show.id}>
+            
+            <div className="Container-info" key={show.id}>
+
               <PodcastCard
                 id={show.id}
                 img={show.image}
@@ -95,6 +107,12 @@ const Preview = () => {
                 title={show.title}
                 price={show.price}
                 onClick={() => handleShowClick(show.id)}
+                podcast={selectedShowData[selectedShow]}
+                onClose={() => setSelectedShow(null)}
+                onPlay={handlePlayEpisode}
+                onSeasonChange={handleSeasonChange}
+                selectedSeasonIndex={selectedSeasonIndex}
+
               />
 
               <p>Seasons: {show.seasons}</p>
@@ -112,6 +130,8 @@ const Preview = () => {
                 <button onClick={() => toggleDescription(show.id)}>
                   {selectedShowData[show.id]?.descriptionExpanded ? 'Show Less' : 'Show More'}
                 </button>
+
+                
               )}
 <input 
                 name="isFavourite"
@@ -131,26 +151,6 @@ const Preview = () => {
           onClose={() => setSelectedShow(null)} // Add a function to handle closing the selected podcast details
         />
       )}
-
-      {/* Display the list of seasons for the selected show */}
-      {selectedShowData[selectedShow] &&
-        selectedShowData[selectedShow].seasons.map((season, index) => (
-          <button key={index} onClick={() => handleSeasonChange(index)}>
-            Season {index + 1}
-          </button>
-        ))}
-
-      {/* Display only episodes for the selected season */}
-      {selectedShowData[selectedShow] &&
-        selectedShowData[selectedShow].seasons[selectedSeasonIndex].episodes.map(
-          (episode) => (
-            <Episode
-              key={episode.id}
-              episode={episode}
-              onPlay={handlePlayEpisode}
-            />
-          )
-        )}
     </div>
   );
 };
