@@ -25,7 +25,8 @@ const handleSeasonChange = (seasonIndex) => {
   setSelectedSeasonIndex(seasonIndex);
 };
 const handlePlayEpisode = (episode) => {
-setSelectedEpisode(episode);
+setSelectedEpisode(episode.id); // Update the selected episode ID when a new episode is played
+onPlay(episode);
 };
 
 return (
@@ -56,22 +57,31 @@ return (
       {seasons.map((season, index) => (
         <div key={index} className="grid-table-row">
 
-<button className="season-buttons" key={index} onClick={() => toggleSeasonDescription(index)}>
-                Season {index + 1}
-              </button>
-              {showDescriptions[index] && (
+<button className='season-buttons' key={index} onClick={() => toggleSeasonDescription(index)}>
+            Season {index + 1}
+          </button>
+          {showDescriptions[index] && (
                 <div className="episode-list">
-                  <ol>
+                  <ol key={index.id}>
                     {season.episodes.map((episode) => (
                       <li key={episode.id}>
-                        <Episode key={episode.id} episode={episode} onPlay={handlePlayEpisode} />
+                        <Episode
+                          key={episode.id}
+                          episode={episode}
+                          onPlay={handlePlayEpisode}
+                        />
+                        <audio controls>
+                        <source key={episode.id} src={episode.file} />
+                        Your browser does not support the audio element.
+                      </audio>
+
                       </li>
                     ))}
                   </ol>
                 </div>
               )}
-            </div>
-          ))}
+        </div>
+      ))}
     </div>
     <p>
       Last Updated: {new Date(updated).toLocaleDateString()}
@@ -79,16 +89,7 @@ return (
     <p>Rating: {rating}</p>
     <p>Review Count: {reviewCount}</p>
     {/* Audio player to play the selected episode */}
-    {selectedEpisode && (
-      <div className="audio-player">
-        <span> Playing: {selectedEpisode.title}</span>
-        {/* Add your audio player component here */}
-        <audio controls>
-          <source src={selectedEpisode.audioUrl} type="audio/mpeg" />
-          Your browser does not support the audio element.
-        </audio>
-      </div>
-    )}
+
   </div>
 </div>
 );
