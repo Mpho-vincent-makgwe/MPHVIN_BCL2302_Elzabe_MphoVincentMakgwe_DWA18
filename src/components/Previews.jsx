@@ -5,6 +5,7 @@ import { fetchPodcasts, fetchPodcastById } from '../services/PodcastService'
 import Header from './Header'; 
 import PodcastShow from './PodcastShows';
 import '../styles/Preview.css';
+import Fuse from 'fuse.js';
 
 
 const useLocalStorageState = (key, defaultValue) => {
@@ -132,12 +133,54 @@ useEffect(() => {
     localStorage.setItem(`favorite_${showId}`, isFavorite ? '1' : '0');
   };
 
+  // Sorting functions
+  const handleSortAZ = () => {
+    const sortedShows = [...shows].sort((a, b) => a.title.localeCompare(b.title));
+    setShows(sortedShows);
+  };
+
+  const handleSortZA = () => {
+    const sortedShows = [...shows].sort((a, b) => b.title.localeCompare(a.title));
+    setShows(sortedShows);
+  };
+
+  const handleSortByDateAscending = () => {
+    const sortedShows = [...shows].sort((a, b) => new Date(a.updated) - new Date(b.updated));
+    setShows(sortedShows);
+  };
+
+  const handleSortByDateDescending = () => {
+    const sortedShows = [...shows].sort((a, b) => new Date(b.updated) - new Date(a.updated));
+    setShows(sortedShows);
+  };
+
+  // Filtering function
+  const handleFilterByTitle = (searchQuery) => {
+    const filteredShows = allShows.filter((show) => show.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    setShows(filteredShows);
+  };
+
+  // Fuzzy search function
+  const handleFuzzySearch = (searchQuery) => {
+    const fuse = new Fuse(allShows, { keys: ['title'] });
+    const fuzzyResults = fuse.search(searchQuery);
+    const fuzzyMatches = fuzzyResults.map((result) => result.item);
+    setShows(fuzzyMatches);
+  };
+
 
   return (
     // < theme={theme}>
     
     <div className="podcast-card"key={shows.id} >
-      <Header className="header" />
+      <Header
+        onSortAZ={handleSortAZ}
+        onSortZA={handleSortZA}
+        onSortByDateAscending={handleSortByDateAscending}
+        onSortByDateDescending={handleSortByDateDescending}
+        onFilterByTitle={handleFilterByTitle}
+        onFuzzySearch={handleFuzzySearch}
+      />
 
       {loading ? (
         
