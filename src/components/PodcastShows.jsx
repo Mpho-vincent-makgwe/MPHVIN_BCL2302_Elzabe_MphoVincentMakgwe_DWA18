@@ -5,9 +5,9 @@ import Episode from './Episode';
 
 const PodcastShow = ({ podcast, onClose, onPlay }) => {
 
-const [selectedEpisode, setSelectedEpisode] = useState(null);
+  const [selectedEpisodeId, setSelectedEpisodeId] = useState(null);
 const { title, image, description, genres, seasons, updated, rating, reviewCount, episode } = podcast;
-const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
+const [, setSelectedSeasonIndex] = useState(0);
 const [showDescriptions, setShowDescriptions] = useState({});
 
 if (!podcast) {
@@ -21,11 +21,8 @@ const toggleSeasonDescription = (seasonIndex) => {
   }));
 };
 
-const handleSeasonChange = (seasonIndex) => {
-  setSelectedSeasonIndex(seasonIndex);
-};
 const handlePlayEpisode = (episode) => {
-setSelectedEpisode(episode.id); // Update the selected episode ID when a new episode is played
+  setSelectedEpisodeId(episode.id); // Update the selected episode ID when a new episode is played
 onPlay(episode);
 };
 
@@ -70,10 +67,12 @@ return (
                           episode={episode}
                           onPlay={handlePlayEpisode}
                         />
-                        <audio controls>
-                        <source key={episode.id} src={episode.file} />
-                        Your browser does not support the audio element.
-                      </audio>
+                        {selectedEpisodeId === episode.id && ( // Render the audio player only for the selected episode
+                          <audio controls>
+                            <source key={episode.id} src={episode.file} />
+                            Your browser does not support the audio element.
+                          </audio>
+                        )}
 
                       </li>
                     ))}
