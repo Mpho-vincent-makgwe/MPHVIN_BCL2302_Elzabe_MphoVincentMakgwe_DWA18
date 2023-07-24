@@ -67,12 +67,10 @@ return (
                           episode={episode}
                           onPlay={handlePlayEpisode}
                         />
-                        {selectedEpisodeId === episode.id && ( // Render the audio player only for the selected episode
                           <audio controls>
                             <source key={episode.id} src={episode.file} />
                             Your browser does not support the audio element.
                           </audio>
-                        )}
 
                       </li>
                     ))}
