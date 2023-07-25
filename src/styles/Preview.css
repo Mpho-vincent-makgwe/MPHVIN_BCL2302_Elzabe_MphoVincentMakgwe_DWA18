@@ -1,78 +1,94 @@
 
-  .podcast-container-main {
-    position: center;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); 
-    grid-gap: 1%;
-    padding-top: 15%; /* Gap between the grid items */
-  }
+.podcast-main {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 10px;
+border-block: 40%;
+}
 
-  .Container-info button {
-    padding: 8px 12px;
-    color: #fff;
+
+.Container-container{
+    border: rgb(138, 156, 1) solid 1px;
+    text-align: center;
+    border-radius: 5%;
+    background-color: rgb(6, 6, 6);
+    color: color-mix(in srgb-linear, rgb(0, 255, 85) 80%, rgb(3, 24, 254) 20%);
+}
+.podcast-cards{
+    padding-top: 6%;
+}
+
+.backButton{
+    position: fixed;
+    z-index: 1;
+    top: 5%;
+    left: 2%;
+    background-color: rgb(60, 60, 212);
     border: none;
-    border-radius: 4px;
+    font-size: 18px;
     cursor: pointer;
-  }
+    padding-top: 3%;
+    color:white; 
+}
 
-  @media (max-width: 768px) {
-    .Container-info {
-      width: 100%;
-    }
-  }
-  .Container-info img {
-    width: 100%;
-    max-height: 200px;
-    object-fit: cover;
-    margin-bottom: 10px;
-  }
-  .Container-info {
-    position: center;
-  }
 
-  .Container-info p {
-    margin-bottom: 10px;
-  }
-  
-  .Container-info button {
+.ShowMore-less{
     padding: 8px 12px;
     background-color: #007bff;
     color: #000000;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
-  
-  .Container-info button:hover {
-    background-color: #79abe0;
-  }
+}
+@media screen and (max-width: 900px) {
+/* Add other styles for medium screens if needed */
+.podcast-main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    border-block: 40%;
+    }
+}
 
-  .grid-container{
-    border: 1px solid #ccc;
-  }
-  /* loading.css */
-@keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-  
-  .loading-container {
+/* Media query for small screens */
+@media screen and (max-width: 600px) {
+/* Add other styles for small screens if needed */
+.podcast-main {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .loading-spinner {
-    border: 4px solid rgba(0, 0, 0, 0.3);
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-  }
-  
+flex-wrap: wrap;
+    gap: 5px;
+    border-block: 40%;
+    }
+    .podcast-cards{
+        padding-top: 10%;
+    }
+    
+}
+
+
+
+@keyframes spin {
+0% {
+    transform: rotate(0deg);
+}
+100% {
+    transform: rotate(360deg);
+}
+}
+
+.loading-container {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+}
+
+.loading-spinner {
+border: 4px solid rgba(0, 0, 0, 0.3);
+border-top: 4px solid #3498db;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+animation: spin 1s linear infinite;
+}
+

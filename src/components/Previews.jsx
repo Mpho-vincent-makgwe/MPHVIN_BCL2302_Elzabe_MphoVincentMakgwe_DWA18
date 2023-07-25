@@ -1,5 +1,5 @@
 import genres  from '../Services/genres'
-import  { useEffect, useState } from 'react';
+import  { useEffect, useState, useRef } from 'react';
 import PodcastCard from './PodcastCard'; 
 import { fetchPodcasts, fetchPodcastById } from '../services/PodcastService'
 import Header from './Header'; 
@@ -16,13 +16,14 @@ const useLocalStorageState = (key, defaultValue) => {
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(value));
   }, [key, value]);
-
   return [value, setValue];
 };
 
 
 
 const Preview = () => {
+
+
   const [loading, setLoading] = useState(true);
   const [shows, setShows] = useLocalStorageState('shows', []);
   const [selectedShow, setSelectedShow] = useLocalStorageState('selectedShow', null);
@@ -30,9 +31,10 @@ const Preview = () => {
   const [selectedShowData, setSelectedShowData] = useLocalStorageState('selectedShowData', {});
   const [maxLength] = useState(4);
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
 
 
-
+  const prevShowsRef = useRef([]);
 
 useEffect(() => {
   const storedSelectedShow = localStorage.getItem('selectedShow');
@@ -156,23 +158,46 @@ useEffect(() => {
 
   // Filtering function
   const handleFilterByTitle = (searchQuery) => {
-    const filteredShows = allShows.filter((show) => show.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    const filteredShows = shows.filter((show) =>
+      show.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
     setShows(filteredShows);
   };
 
   // Fuzzy search function
   const handleFuzzySearch = (searchQuery) => {
-    const fuse = new Fuse(allShows, { keys: ['title'] });
+
+    setSearchQuery(searchQuery);
+  if (!searchQuery) {
+    setShows(prevShowsRef.current); // If the search query is empty, reset to the original list of shows
+  } else {
+    const fuse = new Fuse(shows, { keys: ['title'] });
     const fuzzyResults = fuse.search(searchQuery);
     const fuzzyMatches = fuzzyResults.map((result) => result.item);
+    prevShowsRef.current = shows;
     setShows(fuzzyMatches);
+  }
   };
 
+  const handleBack = () => {
+  window.location.reload();
+  if (searchQuery) {
+    // If a search query was entered, clear it and reload the page
+    setSearchQuery('');
+    window.location.reload(); // Reload the page to go back to its original state
+  } else {
+    // If no search query was entered, show the previous state
+    setShows(prevShowsRef.current);
+  }
+       // Reload the page to go back to its original state
+
+
+  };
 
   return (
     // < theme={theme}>
     
-    <div className="podcast-card"key={shows.id} >
+    <div className="podcast-cards"key={shows.id} >
       <Header
         onSortAZ={handleSortAZ}
         onSortZA={handleSortZA}
@@ -193,13 +218,13 @@ useEffect(() => {
       ) : (
         
         <main 
-        className="podcast-container-main" key={shows.id}
+        className="podcast-main" key={shows.id}
         >
 
 
           {shows.map((show) => (
             
-            <div className="Container-info" key={show.id}>
+            <div className="Container-container" key={show.id}>
 
               <PodcastCard
                 id={show.id}
@@ -226,7 +251,6 @@ useEffect(() => {
                   return genre ? genre.title : '';
                 }).join(', ')}
               </p>
-
               <p>{new Date(show.updated).toLocaleDateString()}</p>
               <p>
                 {selectedShowData[show.id]?.descriptionExpanded
@@ -235,10 +259,9 @@ useEffect(() => {
               </p>
               <p>Rating: {show.pricing}</p>
               {show.description.split(' ').length > maxLength && (
-                <button onClick={() => toggleDescription(show.id)}>
+                <button onClick={() => toggleDescription(show.id) }className='ShowMore-less'>
                   {selectedShowData[show.id]?.descriptionExpanded ? 'Show Less' : 'Show More'}
                 </button>
-                
               )}
 <input
             name={`favorite_${show.id}`}
@@ -261,6 +284,8 @@ useEffect(() => {
           onClose={() => setSelectedShow(null)}
         />
       )}
+
+<button className='backButton' onClick={handleBack}>Back</button>
     </div>
   );
 };

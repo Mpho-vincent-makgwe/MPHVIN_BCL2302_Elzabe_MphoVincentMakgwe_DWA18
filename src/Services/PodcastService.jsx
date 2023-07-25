@@ -21,8 +21,6 @@ const fetchPodcastById = async (showId) => {
     const response = await fetch(`${baseUrl}/id/${showId}`);
     const data = await response.json();
 
-    console.log(data)
-
     return data;
   } catch (error) {
     console.error(`Error fetching podcast with ID ${showId}:`, error);

@@ -5,7 +5,7 @@ const Episode = ({ episode, onPlay }) => {
     <div className="episode">
       <h3>{episode.title}</h3>
       <p>{episode.description}</p>
-      <p>Release Date: {new Date(episode.releaseDate).toLocaleDateString()}</p>
+      <p>Release Date: {new Date(episode.updated).toLocaleDateString()}</p>
     </div>
   );
 };

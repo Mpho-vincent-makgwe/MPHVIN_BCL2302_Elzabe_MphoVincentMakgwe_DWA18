@@ -1,123 +1,101 @@
-import '../styles/header.css'
-
-const headerStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  backgroundColor: '#2196f6',
-  color: '#fff',
-  padding: '10px',
-};
-
-const menuButtonStyles = {
-  marginRight: '1rem',
-};
+import React, { useState } from 'react';
+import { Input, Button, Dropdown, Icon } from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
+import '../styles/header.css';
 
 const Header = ({
   onSortAZ,
   onSortZA,
   onSortByDateAscending,
   onSortByDateDescending,
-  onFilterByTitle,
   onFuzzySearch,
 }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSortOptions, setShowSortOptions] = useState(false);
+  const [showSearchForm, setShowSearchForm] = useState(false);
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
+    onFuzzySearch(searchQuery);
+  };
+
+  const handleSortIconClick = () => {
+    setShowSortOptions((prev) => !prev);
+  };
+
+  const handleSearchIconClick = () => {
+    setShowSearchForm((prev) => !prev);
+  };
+
+  const handleThemeOptionClick = (theme) => {
+    setIsDarkTheme(theme === 'dark');
+    setShowSettingsMenu(false);
+  };
+
   return (
-    <div className='header' style={headerStyles}>
-      <div  style={menuButtonStyles}>
-        {/* You can add your menu button icon here */}
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          width="24"
-          height="24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M4 6h16M4 12h16m-7 6h7"
-          />
-        </svg>
-        <h4>Pod-Lax with Vincent</h4>
+    <div className='header'>
+    <div className={`header ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
+      <div onClick={handleSearchIconClick} className='header-Search'>
+        <Icon name='search' />
       </div>
 
-      
-      
-      <div>
-        <input type="text" onChange={(e) => onFilterByTitle(e.target.value)} placeholder="Search by title"/>
-          <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          width="24"
-          height="24"
-        >
-          {/* Add your search icon SVG path here */}
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            d="M12 6.5c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5 6.5-2.91 6.5-6.5-2.91-6.5-6.5-6.5zm0 0l-3 3"
+      {showSearchForm && (
+        <form onSubmit={handleSearchSubmit}>
+          <Input
+            icon='search'
+            iconPosition='left'
+            type='text'
+            placeholder='Search by title'
+            value={searchQuery}
+            onChange={handleSearchChange}
           />
-        </svg>
+          <Button type='submit'>Search</Button>
+        </form>
+      )}
 
-        
-<div className="dropdown">
-          <label htmlFor="sortOptions" className="dropdown-label">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              width="24"
-              height="24"
-            >
-              {/* Your sort icon SVG path here */}
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16"
-              />
-            </svg>
-          </label>
-          <select
-            id="sortOptions"
-            className="dropdown-menu"
-            onChange={(e) => {
-              const selectedOption = e.target.value;
-              switch (selectedOption) {
-                case 'sortAZ':
-                  onSortAZ();
-                  break;
-                case 'sortZA':
-                  onSortZA();
-                  break;
-                case 'sortDateAsc':
-                  onSortByDateAscending();
-                  break;
-                case 'sortDateDesc':
-                  onSortByDateDescending();
-                  break;
-                default:
-                  break;
-              }
-            }}
-          >
-            <option value="default" disabled selected>
-              Sort
-            </option>
-            <option value="sortAZ">Sort A-Z</option>
-            <option value="sortZA">Sort Z-A</option>
-            <option value="sortDateAsc">Sort by Date Ascending</option>
-            <option value="sortDateDesc">Sort by Date Descending</option>
-          </select>
-        </div>
-        
+      <div onClick={handleSortIconClick} className={`sort-container ${showSortOptions ? 'active' : ''}`}>
+        <Icon name={`sort content ${showSortOptions ? 'up' : 'down'}`} />
+        <Dropdown
+          placeholder='Sort By'
+          selection
+          options={[
+            { key: 'az', value: 'az', text: 'A-Z' },
+            { key: 'za', value: 'za', text: 'Z-A' },
+            { key: 'asc', value: 'asc', text: 'Date Ascending' },
+            { key: 'desc', value: 'desc', text: 'Date Descending' },
+          ]}
+          onChange={(e, { value }) => {
+            if (value === 'az') {
+              onSortAZ();
+            } else if (value === 'za') {
+              onSortZA();
+            } else if (value === 'asc') {
+              onSortByDateAscending();
+            } else if (value === 'desc') {
+              onSortByDateDescending();
+            }
+          }}
+        />
       </div>
+
+      <h5>Pod-Lax</h5>
+      <div className="SearchButton" onClick={() => setShowSettingsMenu(!showSettingsMenu)}>
+        <Icon name={`settings ${showSettingsMenu ? 'active' : ''}`} />
+        {showSettingsMenu && (
+          <div className="settings-menu">
+            <h4>Choose Theme:</h4>
+            <Button onClick={() => handleThemeOptionClick('light')}>Light Theme</Button>
+            <Button onClick={() => handleThemeOptionClick('dark')}>Dark Theme</Button>
+          </div>
+        )}
+      </div>
+    </div>
     </div>
   );
 };

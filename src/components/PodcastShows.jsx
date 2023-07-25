@@ -83,9 +83,6 @@ return (
     <p>
       Last Updated: {new Date(updated).toLocaleDateString()}
     </p>
-    <p>Rating: {rating}</p>
-    <p>Review Count: {reviewCount}</p>
-    {/* Audio player to play the selected episode */}
 
   </div>
 </div>

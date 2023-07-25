@@ -1,8 +1,90 @@
 .header {
+    text-align: center;
+    justify-content: space-between;
+    background-color: #2196f6;
+    color: #fff;
+    padding: 10px;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #fff; /* Set your desired background color */
-    z-index: 999; /* Ensure the header stays above other elements */
+    z-index: 1;
+    display: flex;
   }
+  
+  .header-container {
+    margin-right: 1rem;
+    cursor: pointer;
+  }
+  
+  .header-container:hover {
+    opacity: 0.8;
+  }
+  
+  form {
+    display: flex;
+    align-items: center;
+  }
+  
+  input {
+    margin-right: 5px;
+  }
+  
+  button {
+    margin-left: 5px;
+  }
+  
+  .sort-container {
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .sort-container .dropdown.icon {
+    margin-left: 5px;
+  }
+  
+  .sort-container.active .dropdown.icon {
+    transform: rotate(180deg);
+  }
+  
+  h5 {
+    margin: 0;
+  }
+  
+  .SearchButton {
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .settings-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .settings-menu h4 {
+    margin: 0 0 5px;
+  }
+  
+  .settings-menu button {
+    margin-right: 5px;
+  }
+  
+  @media screen and (max-width: 600px) {
+    .header {
+      flex-direction: column;
+      text-align: center;
+      display: flex;
+      flex-direction: row;
+    }
+    .header-container {
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+      }
+    
+      /* Add other styles for small screens if needed */
+    }
