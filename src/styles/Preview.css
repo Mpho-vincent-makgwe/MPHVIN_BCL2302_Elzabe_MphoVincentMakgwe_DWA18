@@ -48,6 +48,12 @@ border-block: 40%;
     gap: 10px;
     border-block: 40%;
     }
+    .backButton{
+        position: fixed;
+        top: 8%;
+        font-size: 15px;
+        left: 0;
+    }
 }
 
 /* Media query for small screens */
@@ -61,6 +67,13 @@ flex-wrap: wrap;
     }
     .podcast-cards{
         padding-top: 10%;
+    }
+    .backButton{
+        position: fixed;
+        top: 12%;
+        font-size: 12px;
+        cursor: pointer;
+        left: 0;
     }
     
 }

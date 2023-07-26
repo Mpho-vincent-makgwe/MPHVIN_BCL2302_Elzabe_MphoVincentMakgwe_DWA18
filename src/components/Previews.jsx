@@ -29,7 +29,7 @@ const Preview = () => {
   const [selectedShow, setSelectedShow] = useLocalStorageState('selectedShow', null);
   const [, setSelectedSeason] = useState(0);
   const [selectedShowData, setSelectedShowData] = useLocalStorageState('selectedShowData', {});
-  const [maxLength] = useState(4);
+  const [maxLength] = useState(5);
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -243,7 +243,6 @@ useEffect(() => {
                 onFavoriteChange={(isFavorite) => handleFavoriteChange(show.id, isFavorite)}
               />
               <p>Seasons: {show.seasons}</p>
-              <p>Pricing: {show.pricing}</p>
               <p>
                 Genres:
                 {show.genres.map((genreId) => {
@@ -257,7 +256,6 @@ useEffect(() => {
                   ? show.description
                   : `${show.description.split(' ').slice(0, maxLength).join(' ')}...`}
               </p>
-              <p>Rating: {show.pricing}</p>
               {show.description.split(' ').length > maxLength && (
                 <button onClick={() => toggleDescription(show.id) }className='ShowMore-less'>
                   {selectedShowData[show.id]?.descriptionExpanded ? 'Show Less' : 'Show More'}

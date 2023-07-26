@@ -85,6 +85,7 @@ const Header = ({
       </div>
 
       <h5>Pod-Lax</h5>
+      
       <div className="SearchButton" onClick={() => setShowSettingsMenu(!showSettingsMenu)}>
         <Icon name={`settings ${showSettingsMenu ? 'active' : ''}`} />
         {showSettingsMenu && (

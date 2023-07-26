@@ -39,7 +39,7 @@ return (
       <ul className="list-disc list-inside mb-4">
         Genres:
         {genres.map((genre) => (
-          <li key={genre}>{genre}</li>
+          <li key={genre.id}>{genre}</li>
         ))}
       </ul>
     ) : (
@@ -68,7 +68,7 @@ return (
                           onPlay={handlePlayEpisode}
                         />
                           <audio controls>
-                            <source key={episode.id} src={episode.file} />
+                            <source key={episode.audio.id} src={episode.file} />
                             Your browser does not support the audio element.
                           </audio>
 
