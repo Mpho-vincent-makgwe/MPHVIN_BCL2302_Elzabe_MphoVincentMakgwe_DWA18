@@ -1,6 +1,6 @@
 // Episode.js
 
-const Episode = ({ episode, onPlay }) => {
+const Episode = ({ episode }) => {
   return (
     <div className="episode">
       <h3>{episode.title}</h3>

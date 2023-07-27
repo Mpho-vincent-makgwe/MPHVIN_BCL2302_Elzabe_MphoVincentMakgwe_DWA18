@@ -1,23 +1,27 @@
+.Header{
+    background-color: rgb(0, 239, 239);
+    display: flex;
+}
 
-.podcast-main {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 10px;
-border-block: 40%;
+.podcast-main{
+    /* display: grid;
+    grid-template-columns: repeat(4, 2fr); */
+    column-gap: 0.5%;
+    row-gap: 0.1%;
 }
 
 
 .Container-container{
-    border: rgb(138, 156, 1) solid 1px;
     text-align: center;
+    background-color: #f8e9b7be;
     border-radius: 5%;
-    background-color: rgb(6, 6, 6);
-    color: color-mix(in srgb-linear, rgb(0, 255, 85) 80%, rgb(3, 24, 254) 20%);
 }
 .podcast-cards{
-    padding-top: 6%;
+background-color: #624343;
+padding-left: 0.5%;
+margin: 0;
+box-sizing: border-box;
 }
-
 .backButton{
     position: fixed;
     z-index: 1;
@@ -40,43 +44,24 @@ border-block: 40%;
     border-radius: 4px;
     cursor: pointer;
 }
-@media screen and (max-width: 900px) {
-/* Add other styles for medium screens if needed */
-.podcast-main {
+
+
+ @media screen and (min-width: 768px) {
+.podcast-main{
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    border-block: 40%;
-    }
-    .backButton{
-        position: fixed;
-        top: 8%;
-        font-size: 15px;
-        left: 0;
-    }
 }
+} 
+ @media screen and (min-width: 1024px) {
+.podcast-main{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
+} 
+
 
 /* Media query for small screens */
-@media screen and (max-width: 600px) {
-/* Add other styles for small screens if needed */
-.podcast-main {
-    display: flex;
-flex-wrap: wrap;
-    gap: 5px;
-    border-block: 40%;
-    }
-    .podcast-cards{
-        padding-top: 10%;
-    }
-    .backButton{
-        position: fixed;
-        top: 12%;
-        font-size: 12px;
-        cursor: pointer;
-        left: 0;
-    }
-    
-}
+
 
 
 

@@ -1,4 +1,9 @@
-
+.podcast-card{
+  background-color: rgba(166, 243, 211, 0.668);
+  padding: 0;
+  margin: 0;
+  border-radius: inherit;
+}
 
 .podcast-card--image{
   max-width: 50%;
@@ -6,6 +11,38 @@
   border-radius: 5%;
   border: rgb(42, 249, 18) solid 1px;
   cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+@keyframes danceAnimation {
+  0% {
+    transform: translateY(0);
+    
+  }
+  25% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Apply the animation on hover */
+.podcast-card--image:hover {
+  animation: danceAnimation 0.9s infinite;
+}
+
+
+
+.podcast-card--title{
+font-weight: 10;
+font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+font-style: italic;
 }
 
 /* Media query for medium screens */

@@ -6,6 +6,8 @@ import Header from './Header';
 import PodcastShow from './PodcastShows';
 import '../styles/Preview.css';
 import Fuse from 'fuse.js';
+import NavBar from '../components/NavBar'
+import { AppBar } from '@mui/material';
 
 
 const useLocalStorageState = (key, defaultValue) => {
@@ -196,8 +198,11 @@ useEffect(() => {
 
   return (
     // < theme={theme}>
+    <body >
+<div className="Header">
+      <  >
+      <NavBar />
     
-    <div className="podcast-cards"key={shows.id} >
       <Header
         onSortAZ={handleSortAZ}
         onSortZA={handleSortZA}
@@ -206,7 +211,8 @@ useEffect(() => {
         onFilterByTitle={handleFilterByTitle}
         onFuzzySearch={handleFuzzySearch}
       />
-
+      </></div>
+<div className="podcast-cards" key={shows.id} >
       {loading ? (
         
         <section>
@@ -217,7 +223,7 @@ useEffect(() => {
         </section>
       ) : (
         
-        <main 
+        <div 
         className="podcast-main" key={shows.id}
         >
 
@@ -273,18 +279,20 @@ useEffect(() => {
           </label>
             </div>
           ))}
-        </main>
+        </div>
       )}
       {/* Render the PodcastShow component when a podcast is selected */}
       {selectedShowData[selectedShow] && (
         <PodcastShow
           podcast={selectedShowData[selectedShow]}
+          seasons={selectedShowData[selectedShow]?.seasons}
           onClose={() => setSelectedShow(null)}
         />
       )}
 
 <button className='backButton' onClick={handleBack}>Back</button>
     </div>
+    </body>
   );
 };
 export default Preview;

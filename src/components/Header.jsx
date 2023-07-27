@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Input, Button, Dropdown, Icon } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import '../styles/header.css';
+import { Toolbar, Typography } from '@mui/material';
+
 
 const Header = ({
   onSortAZ,
@@ -39,8 +41,12 @@ const Header = ({
   };
 
   return (
-    <div className='header'>
-    <div className={`header ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
+    <header  className="header">
+      
+<div color='transparent' >
+  
+        <Toolbar>
+          <div className={`header ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
       <div onClick={handleSearchIconClick} className='header-Search'>
         <Icon name='search' />
       </div>
@@ -60,7 +66,7 @@ const Header = ({
       )}
 
       <div onClick={handleSortIconClick} className={`sort-container ${showSortOptions ? 'active' : ''}`}>
-        <Icon name={`sort content ${showSortOptions ? 'up' : 'down'}`} />
+        <Icon placeholder={`sort content ${showSortOptions ? 'up' : 'down'}`} />
         <Dropdown
           placeholder='Sort By'
           selection
@@ -83,21 +89,22 @@ const Header = ({
           }}
         />
       </div>
-
-      <h5>Pod-Lax</h5>
       
       <div className="SearchButton" onClick={() => setShowSettingsMenu(!showSettingsMenu)}>
-        <Icon name={`settings ${showSettingsMenu ? 'active' : ''}`} />
+        <Icon placeholder={`settings ${showSettingsMenu ? 'active' : ''}`} />
         {showSettingsMenu && (
           <div className="settings-menu">
-            <h4>Choose Theme:</h4>
+            <Typography variant="p">Choose Theme:</Typography>
             <Button onClick={() => handleThemeOptionClick('light')}>Light Theme</Button>
             <Button onClick={() => handleThemeOptionClick('dark')}>Dark Theme</Button>
           </div>
         )}
       </div>
     </div>
-    </div>
+        </Toolbar>
+      </div>
+      </header>
+
   );
 };
 

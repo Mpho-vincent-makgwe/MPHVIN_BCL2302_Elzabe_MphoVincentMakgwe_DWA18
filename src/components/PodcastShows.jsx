@@ -6,7 +6,7 @@ import Episode from './Episode';
 const PodcastShow = ({ podcast, onClose, onPlay }) => {
 
   const [selectedEpisodeId, setSelectedEpisodeId] = useState(null);
-const { title, image, description, genres, seasons, updated, rating, reviewCount, episode } = podcast;
+const { title, image, description, genres, seasons, updated, episode } = podcast;
 const [, setSelectedSeasonIndex] = useState(0);
 const [showDescriptions, setShowDescriptions] = useState({});
 
@@ -51,27 +51,32 @@ return (
 
         
       </div>
-      {seasons.map((season, index) => (
+{seasons && seasons.map((season, index) => (
         <div key={index} className="grid-table-row">
 
 <button className='season-buttons' key={index} onClick={() => toggleSeasonDescription(index)}>
             Season {index + 1}
           </button>
+          <br/>
+
           {showDescriptions[index] && (
-                <div className="episode-list">
+                <div onClick={() => toggleSeasonDescription(index)}className="new-Overlay">
+                  <button >Back</button>
                   <ol key={index.id}>
+                    <h4>{season.title}</h4>
+                  <img className='season-picture' src={season.image} alt={season.title}/>
                     {season.episodes.map((episode) => (
                       <li key={episode.id}>
                         <Episode
                           key={episode.id}
                           episode={episode}
                           onPlay={handlePlayEpisode}
+                          
                         />
-                          <audio controls>
-                            <source key={episode.audio.id} src={episode.file} />
+                          <audio className='audio' controls>
+                            <source key={episode.id} src={episode.file} />
                             Your browser does not support the audio element.
                           </audio>
-
                       </li>
                     ))}
                   </ol>

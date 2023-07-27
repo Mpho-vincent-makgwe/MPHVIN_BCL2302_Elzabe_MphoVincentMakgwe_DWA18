@@ -3,8 +3,6 @@
 const baseUrl = 'https://podcast-api.netlify.app';
 
 const fetchPodcasts = async () => {
-
-
   try {
     const response = await fetch(`${baseUrl}/shows`);
     const data = await response.json();
@@ -16,7 +14,6 @@ const fetchPodcasts = async () => {
 };
 
 const fetchPodcastById = async (showId) => {
-
   try {
     const response = await fetch(`${baseUrl}/id/${showId}`);
     const data = await response.json();
