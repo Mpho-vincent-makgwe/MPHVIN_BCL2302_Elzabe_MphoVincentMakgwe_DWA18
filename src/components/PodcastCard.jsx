@@ -1,7 +1,7 @@
 import '../styles/PodcastCard.css'; 
 
 
-const PodcastCard = ({ img, title, onClick }) => {
+const PodcastCard = ({id,img,rating, reviewCount,location,title,price,selectedSeasonIndex, onSeasonChange, onClose,podcast,onClick,onFavoriteChange}) => {
   return (
 
     <div className="podcast-card" onClick={onClick}>

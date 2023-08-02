@@ -1,13 +1,22 @@
 import genres  from '../Services/genres'
 import  { useEffect, useState, useRef } from 'react';
 import PodcastCard from './PodcastCard'; 
-import { fetchPodcasts, fetchPodcastById } from '../services/PodcastService'
-import Header from './Header'; 
+import { fetchPodcasts, fetchPodcastById } from '../Services/PodcastService'
+import  SortAndSearch from './SortAndSearch';
+import  Header from './Header';
 import PodcastShow from './PodcastShows';
 import '../styles/Preview.css';
 import Fuse from 'fuse.js';
-import NavBar from '../components/NavBar'
-import { AppBar } from '@mui/material';
+import AuthForm from '../Authentication/Auth';
+import useAuthentication from '../Services/Supabase';
+import { VscArrowSmallLeft, VscArrowUp } from "react-icons/vsc";
+
+import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import { Button } from 'react-bootstrap';
+import FavoritesList from './FavouritesList';
+
+
+
 
 
 const useLocalStorageState = (key, defaultValue) => {
@@ -33,7 +42,9 @@ const Preview = () => {
   const [selectedShowData, setSelectedShowData] = useLocalStorageState('selectedShowData', {});
   const [maxLength] = useState(5);
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
+  const [favorites, setFavorites] = useLocalStorageState('favorites', []);
   const [searchQuery, setSearchQuery] = useState('');
+  const { user, signOut } = useAuthentication();
 
 
   const prevShowsRef = useRef([]);
@@ -114,14 +125,13 @@ useEffect(() => {
       },
     }));
   };
-  const handlePlayEpisode = (episode) => {
-    console.log('Playing episode:', episode);
-    // You can implement the audio playback logic here
-  };
+
   const handleSeasonChange = (seasonIndex) => {
     setSelectedSeasonIndex(seasonIndex);
     localStorage.setItem('selectedSeasonIndex', seasonIndex);
   };
+
+
 
   const handleFavoriteChange = (showId, isFavorite) => {
     const currentDateTime = getCurrentDateTime();
@@ -133,8 +143,15 @@ useEffect(() => {
         favoriteDateTime: isFavorite ? currentDateTime : null,
       },
     }));
-
-    localStorage.setItem(`favorite_${showId}`, isFavorite ? '1' : '0');
+    setFavorites((prevFavorites) => {
+      if (isFavorite) {
+        // Add the showId to favorites if it's not already present
+        return [...prevFavorites, showId];
+      } else {
+        // Remove the showId from favorites if it's already present
+        return prevFavorites.filter((favoriteId) => favoriteId !== showId);
+      }
+    });
   };
 
   // Sorting functions
@@ -196,22 +213,57 @@ useEffect(() => {
 
   };
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+  };
+
+  if (!user && loading) {
+    return (
+<div>
+
+
+
+<div className="podcast-cards">
+  <section>
+    <div className="loading-container">
+      <div className="loading-spinner"></div>
+    </div>
+  </section>
+</div>
+</div>
+  
+    );
+} else if (!user) {
+    return <AuthForm />;
+    }else{
   return (
-    // < theme={theme}>
-    <body >
-<div className="Header">
-      <  >
-      <NavBar />
-    
-      <Header
-        onSortAZ={handleSortAZ}
-        onSortZA={handleSortZA}
-        onSortByDateAscending={handleSortByDateAscending}
-        onSortByDateDescending={handleSortByDateDescending}
-        onFilterByTitle={handleFilterByTitle}
-        onFuzzySearch={handleFuzzySearch}
-      />
-      </></div>
+    <section >
+      <header className='header'>
+     <Header/>
+
+      < SortAndSearch
+            onSortAZ={handleSortAZ}
+            onSortZA={handleSortZA}
+            onSortByDateAscending={handleSortByDateAscending}
+            onSortByDateDescending={handleSortByDateDescending}
+            onFilterByTitle={handleFilterByTitle}
+            onFuzzySearch={handleFuzzySearch}
+            /> 
+    </header>
+< >
+    <FavoritesList
+    show={shows} // Pass the list of shows to the FavoritesList component
+    favorites={favorites} // Pass the list of favorite shows to the FavoritesList component
+    selectedShowData={selectedShowData} // Pass the selectedShowData state to the FavoritesList component
+    onFavoriteChange={handleFavoriteChange} // Pass the handleFavoriteChange function to the FavoritesList component
+    maxLength={maxLength} // Pass the maxLength value to the FavoritesList component
+    />
+</>
+
 <div className="podcast-cards" key={shows.id} >
       {loading ? (
         
@@ -219,14 +271,17 @@ useEffect(() => {
           <div className="loading-container">
           <div className="loading-spinner"></div>
           </div>
-          
         </section>
       ) : (
-        
         <div 
-        className="podcast-main" key={shows.id}
-        >
+        className="podcast-main" key={shows.id}>
 
+{/**This is for Redering my favourites when Clicked */}
+
+
+
+{/**
+ * This is my Preview part*/} 
 
           {shows.map((show) => (
             
@@ -235,7 +290,6 @@ useEffect(() => {
               <PodcastCard
                 id={show.id}
                 img={show.image}
-                rating={show.rating}
                 reviewCount={show.reviewCount}
                 location={show.location}
                 title={show.title}
@@ -243,7 +297,6 @@ useEffect(() => {
                 onClick={() => handleShowClick(show.id)}
                 podcast={selectedShowData[selectedShow]}
                 onClose={() => setSelectedShow(null)}
-                onPlay={handlePlayEpisode}
                 onSeasonChange={handleSeasonChange}
                 selectedSeasonIndex={selectedSeasonIndex}
                 onFavoriteChange={(isFavorite) => handleFavoriteChange(show.id, isFavorite)}
@@ -263,9 +316,10 @@ useEffect(() => {
                   : `${show.description.split(' ').slice(0, maxLength).join(' ')}...`}
               </p>
               {show.description.split(' ').length > maxLength && (
-                <button onClick={() => toggleDescription(show.id) }className='ShowMore-less'>
+
+                <Button onClick={() => toggleDescription(show.id) }className='ShowMore-less'>
                   {selectedShowData[show.id]?.descriptionExpanded ? 'Show Less' : 'Show More'}
-                </button>
+                </Button>
               )}
 <input
             name={`favorite_${show.id}`}
@@ -281,6 +335,10 @@ useEffect(() => {
           ))}
         </div>
       )}
+      
+      
+      
+      
       {/* Render the PodcastShow component when a podcast is selected */}
       {selectedShowData[selectedShow] && (
         <PodcastShow
@@ -290,9 +348,13 @@ useEffect(() => {
         />
       )}
 
-<button className='backButton' onClick={handleBack}>Back</button>
+<Button className='backButton' onClick={handleBack}><VscArrowSmallLeft/></Button>
+<Button className='' ><VscArrowUp/></Button>
     </div>
-    </body>
+    </section>
   );
+}
+
+
 };
 export default Preview;

@@ -1,0 +1,10 @@
+.favorite{
+    background-color: rgb(80, 0, 155);
+    border-radius: 5%;
+width: 100px;
+height: fit-content;
+}
+.favImg{
+    max-width: 50%;
+    max-height: 50%;
+}
