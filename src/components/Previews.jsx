@@ -10,12 +10,9 @@ import Fuse from 'fuse.js';
 import AuthForm from '../Authentication/Auth';
 import useAuthentication from '../Services/Supabase';
 import { VscArrowSmallLeft, VscArrowUp } from "react-icons/vsc";
-
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import { Button } from 'react-bootstrap';
 import FavoritesList from './FavouritesList';
-
-
 
 
 
@@ -43,6 +40,7 @@ const Preview = () => {
   const [maxLength] = useState(5);
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
   const [favorites, setFavorites] = useLocalStorageState('favorites', []);
+  
   const [searchQuery, setSearchQuery] = useState('');
   const { user, signOut } = useAuthentication();
 

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import { MenuItem, Select } from '@mui/material';
 import '../styles/fav.css'
-import Slider from 'react-slick'; // Import the Slider component from react-slick
+// Import the Slider component from react-slick
 import 'slick-carousel/slick/slick.css'; // Import the slick carousel CSS
 import 'slick-carousel/slick/slick-theme.css'; // Import the slick carousel theme CSS
 import '../styles/fav.css';
@@ -43,20 +43,11 @@ const handleSelectChange = (event) => {
 
   const maxLength = 15; // Adjust the number to your desired length
 
-  const toggleDescriptionLength = () => {
-    setDescriptionExpanded((prevExpanded) => !prevExpanded);
+
+  const handleFavoriteClick = (favoriteId) => {
+    setSelectedFavorite(favoriteId);
   };
 
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    autoplay: true, // Set autoplay to true initially
-    autoplaySpeed: 2000,
-  };
 
 
 return (
@@ -77,15 +68,15 @@ label="Select an option"
 
 </Dropdown>
     {/* ... Rest of the sorting buttons ... */}
-    <div className=''>
-    <Slider {...settings}>
+    <div className="slider-container">
+    <div className="slider-content" >
   {favorites.length > 0 ? (
     favorites.map((favoriteId) => {
       const favoriteShow = show.find((showItem) => showItem.id === favoriteId);
 
       if (!favoriteShow) return null; // Handle the case if the show is not found
       return (
-        <div className="favorite" key={favoriteId}>
+        <div className="slider-item" key={favoriteId} onClick={() => handleFavoriteClick(favoriteId)}>
                 <h3>{favoriteShow.title}</h3>
                 <img className="favImg" src={favoriteShow.image} />
                 <p>Added to favorites: {selectedShowData[favoriteId].favoriteDateTime}</p>
@@ -101,7 +92,7 @@ label="Select an option"
   ) : (
     <p>No favorites yet.</p>
   )}
-  </Slider>
+  </div>
 </div>
 
 </div>

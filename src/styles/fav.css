@@ -1,10 +1,40 @@
-.favorite{
-    background-color: rgb(80, 0, 155);
-    border-radius: 5%;
-width: 100px;
-height: fit-content;
-}
+
 .favImg{
     max-width: 50%;
     max-height: 50%;
 }
+
+.slider-container {
+    width: 100%; /* Set the width of the slider container */
+    overflow: hidden; /* Hide any content that overflows the container */
+  }
+  
+  .slider-content {
+    display: flex; /* Arrange slider items horizontally */
+    transition: transform 0.5s; /* Add a smooth transition effect for sliding */
+  }
+  
+  .slider-item {
+    flex: 0 0 300px; /* Set the width of each slider item */
+    height: 200px; /* Set the height of each slider item */
+    margin-right: 10px; /* Add spacing between slider items */
+    background-color: #ccc; /* Set the background color of each slider item */
+    border-radius: 5%;
+  }
+  
+  /* Animation to slide the items */
+  @keyframes slide {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-310px); /* Translate to the left by the width of each item plus the margin */
+    }
+  }
+  
+  /* Start the animation and loop it */
+  .slider-content {
+    animation: slide 15s linear infinite;
+    cursor: pointer;
+  }
+  
