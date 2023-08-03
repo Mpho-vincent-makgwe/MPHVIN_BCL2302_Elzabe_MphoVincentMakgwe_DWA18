@@ -1,40 +1,31 @@
-
 .favImg{
-    max-width: 50%;
-    max-height: 50%;
+    max-width: 20%;
+    max-height: 20%;
 }
 
-.slider-container {
-    width: 100%; /* Set the width of the slider container */
-    overflow: hidden; /* Hide any content that overflows the container */
+/* FavoritesContainer.css */
+.favorites-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
   }
   
-  .slider-content {
-    display: flex; /* Arrange slider items horizontally */
-    transition: transform 0.5s; /* Add a smooth transition effect for sliding */
+  .favorites-carousel {
+    max-width: 150%; /* Set the maximum width of the carousel */
+    transition: transform 0.5s;
+    overflow: hidden;
   }
   
-  .slider-item {
-    flex: 0 0 300px; /* Set the width of each slider item */
-    height: 200px; /* Set the height of each slider item */
-    margin-right: 10px; /* Add spacing between slider items */
-    background-color: #ccc; /* Set the background color of each slider item */
-    border-radius: 5%;
+  .carousel .slide {
+    display: flex;
+    flex-direction: row; /* Display carousel items horizontally */
   }
   
-  /* Animation to slide the items */
-  @keyframes slide {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-310px); /* Translate to the left by the width of each item plus the margin */
-    }
-  }
-  
-  /* Start the animation and loop it */
-  .slider-content {
-    animation: slide 15s linear infinite;
-    cursor: pointer;
+  /* Custom styles for individual podcast cards */
+  .Container-container {
+    flex: 0 0 200px; /* Adjust the width of individual podcast cards */
+    margin: 0 5px; /* Add some spacing between cards */
   }
   

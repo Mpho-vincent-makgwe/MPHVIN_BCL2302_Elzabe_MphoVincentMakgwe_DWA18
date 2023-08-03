@@ -1,19 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import { MenuItem, Select } from '@mui/material';
-import '../styles/fav.css'
-// Import the Slider component from react-slick
-import 'slick-carousel/slick/slick.css'; // Import the slick carousel CSS
-import 'slick-carousel/slick/slick-theme.css'; // Import the slick carousel theme CSS
 import '../styles/fav.css';
-
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import supabase from '../Services/Supabase';
 
 const FavoritesList = ({ show, favorites, selectedShowData }) => {
-// Additional state for sorting favorites
-const [favoritesSortOrder, setFavoritesSortOrder] = useState('');
-const [descriptionExpanded, setDescriptionExpanded] = useState(false);
-const [selectedOption, setSelectedOption] = React.useState('');
-const {} = favorites;
+  const [selectedFavorite, setSelectedFavorite] = useState(null);
+  const [favoritesSortOrder, setFavoritesSortOrder] = useState('');
+  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
+  const [selectedOption, setSelectedOption] = React.useState('');
+
+  const fetchUserFavorites = async () => {
+    const { user } = supabase;
+    if (user) {
+    //   const favoritesData = await fetchFavorites(user.id);
+      // Process and set the favoritesData state
+    }
+  };
+
+
+  useEffect(() => {
+    fetchUserFavorites();
+  }, [])
+
+
 
 // Helper function to sort favorites by show titles
 const handleSortFavoritesByTitle = (order) => {
@@ -40,12 +52,23 @@ const handleSelectChange = (event) => {
     console.log(`Selected option: ${event.target.value}`);
   };
 
+//   const groupEpisodesByShowAndSeason = (episodes) => {
+//     const groupedEpisodes = episodes.reduce((acc, episode) => {
+//       const { showId, seasonId } = selectedShowData; 
+//       if (!acc[showId]) acc[showId] = {};
+//       if (!acc[showId][seasonId]) acc[showId][seasonId] = [];
+//       acc[showId][seasonId].push(episode);
+//       return acc;
+//     }, {});
+//     return groupedEpisodes;
+//   };
 
   const maxLength = 15; // Adjust the number to your desired length
 
 
   const handleFavoriteClick = (favoriteId) => {
     setSelectedFavorite(favoriteId);
+    console.log('clicked')
   };
 
 
@@ -84,8 +107,9 @@ label="Select an option"
                   <p>{favoriteShow.description}</p>
                 ) : (
                   <p>{favoriteShow.description.slice(0, maxLength)}...</p>
+                  
                 )}
-                
+                <p>Release Date: {new Date(favoriteShow.updated).toLocaleDateString()}</p>
               </div>
       );
     })

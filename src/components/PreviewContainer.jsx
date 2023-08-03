@@ -1,5 +1,5 @@
 import genres  from '../Services/genres'
-import  { useEffect, useState, useRef } from 'react';
+import  { useEffect, useState, useRef,  useMemo, useCallback  } from 'react';
 import PodcastCard from './PodcastCard'; 
 import { fetchPodcasts, fetchPodcastById } from '../Services/PodcastService'
 import  SortAndSearch from './SortAndSearch';
@@ -11,26 +11,22 @@ import AuthForm from '../Authentication/Auth';
 import useAuthentication from '../Services/Supabase';
 import { VscArrowSmallLeft, VscArrowUp } from "react-icons/vsc";
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
-import { Button } from 'react-bootstrap';
+import { Button,Row, Col  } from 'react-bootstrap';
 import FavoritesList from './FavouritesList';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Carousel } from 'react-responsive-carousel';
+import { useLocalStorageState } from '../Services/Storage';
 
 
 
-const useLocalStorageState = (key, defaultValue) => {
-  const storedValue = localStorage.getItem(key);
-  const initial = storedValue ? JSON.parse(storedValue) : defaultValue;
-  const [value, setValue] = useState(initial);
-
-  useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(value));
-  }, [key, value]);
-  return [value, setValue];
-};
 
 
 
-const Preview = () => {
 
+
+  const PreviewContainer = () => {
 
   const [loading, setLoading] = useState(true);
   const [shows, setShows] = useLocalStorageState('shows', []);
@@ -40,10 +36,8 @@ const Preview = () => {
   const [maxLength] = useState(5);
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(0);
   const [favorites, setFavorites] = useLocalStorageState('favorites', []);
-  
   const [searchQuery, setSearchQuery] = useState('');
   const { user, signOut } = useAuthentication();
-
 
   const prevShowsRef = useRef([]);
 
@@ -90,29 +84,32 @@ useEffect(() => {
 
 
 
-  const handleShowClick = async (showId) => {
-    toggleDescription()
-    setSelectedShow(showId);
-    setSelectedSeason(0);
-    setLoading(true);
+  const handleShowClick = useCallback(
+    async (showId) => {
+      toggleDescription();
+      setSelectedShow(showId);
+      setSelectedSeason(0);
+      setLoading(true);
 
-    try {
-      const showData = await fetchPodcastById(showId);
-      setSelectedShowData((prevShowData) => ({
-        ...prevShowData,
-        [showId]: {
-          ...showData,
-          descriptionExpanded:false,
-        },
-      }));
-    } catch (error) {
-      console.error(`Error fetching podcast with ID ${showId}:`, error);
-    } finally {
-      setLoading(false);
-    }
+      try {
+        const showData = await fetchPodcastById(showId);
+        setSelectedShowData((prevShowData) => ({
+          ...prevShowData,
+          [showId]: {
+            ...showData,
+            descriptionExpanded: false,
+          },
+        }));
+      } catch (error) {
+        console.error(`Error fetching podcast with ID ${showId}:`, error);
+      } finally {
+        setLoading(false);
+      }
 
-    localStorage.setItem('selectedShow', showId);
-  };
+      localStorage.setItem('selectedShow', showId);
+    },
+    []
+  );
 
   const toggleDescription = (showId) => {
     setSelectedShowData((prevShowData) => ({
@@ -131,26 +128,29 @@ useEffect(() => {
 
 
 
-  const handleFavoriteChange = (showId, isFavorite) => {
-    const currentDateTime = getCurrentDateTime();
-    setSelectedShowData((prevShowData) => ({
-      ...prevShowData,
-      [showId]: {
-        ...prevShowData[showId],
-        isFavorite,
-        favoriteDateTime: isFavorite ? currentDateTime : null,
-      },
-    }));
-    setFavorites((prevFavorites) => {
-      if (isFavorite) {
-        // Add the showId to favorites if it's not already present
-        return [...prevFavorites, showId];
-      } else {
-        // Remove the showId from favorites if it's already present
-        return prevFavorites.filter((favoriteId) => favoriteId !== showId);
-      }
-    });
-  };
+  const handleFavoriteChange = useCallback(
+    (showId, isFavorite) => {
+      const currentDateTime = getCurrentDateTime();
+      setSelectedShowData((prevShowData) => ({
+        ...prevShowData,
+        [showId]: {
+          ...prevShowData[showId],
+          isFavorite,
+          favoriteDateTime: isFavorite ? currentDateTime : null,
+        },
+      }));
+      setFavorites((prevFavorites) => {
+        if (isFavorite) {
+          return [...prevFavorites, showId];
+        } else {
+          return prevFavorites.filter((favoriteId) => favoriteId !== showId);
+        }
+      });
+    },
+    []
+  );
+
+
 
   // Sorting functions
   const handleSortAZ = () => {
@@ -211,95 +211,27 @@ useEffect(() => {
 
   };
 
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-  };
 
-  if (!user && loading) {
+  // Separate component for rendering individual podcast cards
+  const PodcastCardContainer = ({ show, selectedShowData, onShowClick, onFavoriteChange, maxLength }) => {
+
     return (
-<div>
-
-
-
-<div className="podcast-cards">
-  <section>
-    <div className="loading-container">
-      <div className="loading-spinner"></div>
-    </div>
-  </section>
-</div>
-</div>
-  
-    );
-} else if (!user) {
-    return <AuthForm />;
-    }else{
-  return (
-    <section >
-      <header className='header'>
-     <Header/>
-
-      < SortAndSearch
-            onSortAZ={handleSortAZ}
-            onSortZA={handleSortZA}
-            onSortByDateAscending={handleSortByDateAscending}
-            onSortByDateDescending={handleSortByDateDescending}
-            onFilterByTitle={handleFilterByTitle}
-            onFuzzySearch={handleFuzzySearch}
-            /> 
-    </header>
-< >
-    <FavoritesList
-    show={shows} // Pass the list of shows to the FavoritesList component
-    favorites={favorites} // Pass the list of favorite shows to the FavoritesList component
-    selectedShowData={selectedShowData} // Pass the selectedShowData state to the FavoritesList component
-    onFavoriteChange={handleFavoriteChange} // Pass the handleFavoriteChange function to the FavoritesList component
-    maxLength={maxLength} // Pass the maxLength value to the FavoritesList component
-    />
-</>
-
-<div className="podcast-cards" key={shows.id} >
-      {loading ? (
-        
-        <section>
-          <div className="loading-container">
-          <div className="loading-spinner"></div>
-          </div>
-        </section>
-      ) : (
-        <div 
-        className="podcast-main" key={shows.id}>
-
-{/**This is for Redering my favourites when Clicked */}
-
-
-
-{/**
- * This is my Preview part*/} 
-
-          {shows.map((show) => (
-            
-            <div className="Container-container" key={show.id}>
-
-              <PodcastCard
-                id={show.id}
-                img={show.image}
-                reviewCount={show.reviewCount}
-                location={show.location}
-                title={show.title}
-                price={show.price}
-                onClick={() => handleShowClick(show.id)}
-                podcast={selectedShowData[selectedShow]}
-                onClose={() => setSelectedShow(null)}
-                onSeasonChange={handleSeasonChange}
-                selectedSeasonIndex={selectedSeasonIndex}
-                onFavoriteChange={(isFavorite) => handleFavoriteChange(show.id, isFavorite)}
-              />
-              <p>Seasons: {show.seasons}</p>
+      <div className="Container-container" key={show.id}>
+        <PodcastCard
+          id={show.id}
+          img={show.image}
+          reviewCount={show.reviewCount}
+          location={show.location}
+          title={show.title}
+          price={show.price}
+          onClick={() => onShowClick(show.id)}
+          podcast={selectedShowData[show.id]}
+          onClose={() => onShowClick(null)}
+          onSeasonChange={handleSeasonChange}
+          selectedSeasonIndex={selectedSeasonIndex}
+          onFavoriteChange={(isFavorite) => onFavoriteChange(show.id, isFavorite)}
+        />
+<p>Seasons: {show.seasons}</p>
               <p>
                 Genres:
                 {show.genres.map((genreId) => {
@@ -329,15 +261,148 @@ useEffect(() => {
           <label htmlFor={`favorite_${show.id}`}>
             Favourite  {selectedShowData[show.id]?.isFavorite ? `: ${getCurrentDateTime()}` : ''}
           </label>
-            </div>
+      </div>
+    );
+  };
+
+
+
+  // Separate component for rendering the list of podcasts
+  const PodcastListContainer = ({
+    shows,
+    selectedShowData,
+    handleShowClick,
+    handleSeasonChange,
+    handleFavoriteChange,
+    maxLength,
+  }) => {
+    return (
+      <div className="podcast-cards" key={shows.id}>
+        <Row xs={1} md={2} lg={3} xl={4} className="g-4">
+          {shows.map((show) => (
+            <Col key={show.id}>
+              <PodcastCardContainer
+                show={show}
+                selectedShowData={selectedShowData}
+                onShowClick={handleShowClick}
+                onFavoriteChange={handleFavoriteChange}
+                maxLength={maxLength}
+              />
+            </Col>
           ))}
-        </div>
-      )}
-      
-      
-      
-      
-      {/* Render the PodcastShow component when a podcast is selected */}
+        </Row>
+      </div>
+    );
+  };
+  
+  
+
+  const FavoritesContainer = ({
+    show,
+    favorites,
+    selectedShowData,
+    onFavoriteChange,
+    maxLength,
+  }) => {
+
+    // FavoritesList rendering code here
+    return (
+      <div className="favorites-container">
+        <Carousel showThumbs={false}
+          showStatus={false}
+          showIndicators={false}
+          showArrows={false}
+          infiniteLoop
+          autoPlay
+          interval={5000}
+          stopOnHover={false}
+          transitionTime={500} 
+          className="favorites-carousel"
+          >
+
+<div className="favorites-row">
+        <FavoritesList
+          show={show}
+          favorites={favorites}
+          selectedShowData={selectedShowData}
+          onFavoriteChange={onFavoriteChange}
+          maxLength={maxLength}
+        /></div>
+
+        </Carousel>
+        {/* ... Other details for the favorites list ... */}
+      </div>
+    );
+  };
+
+
+//   const podcastCards = useMemo(
+//     () =>
+//       shows.map((show) => (
+//         <PodcastCardContainer
+//           key={show.id}
+//           show={show}
+//           selectedShowData={selectedShowData}
+//           onShowClick={handleShowClick}
+//           onFavoriteChange={(isFavorite) => handleFavoriteChange(show.id, isFavorite)}
+//           maxLength={maxLength}
+//         />
+//       )),
+//     [shows, selectedShowData, handleShowClick, handleFavoriteChange, maxLength]
+//   );
+
+  if (!user && loading) {
+    return (
+<div>
+
+
+
+<div className="podcast-cards">
+  <section>
+    <div className="loading-container">
+      <div className="loading-spinner"></div>
+    </div>
+  </section>
+</div>
+</div>
+  
+    );
+} else if (!user) {
+    return <AuthForm />;
+    }else{
+
+  return (
+    <section>
+      <header className="header">
+        <Header />
+
+        <SortAndSearch
+          onSortAZ={handleSortAZ}
+          onSortZA={handleSortZA}
+          onSortByDateAscending={handleSortByDateAscending}
+          onSortByDateDescending={handleSortByDateDescending}
+          onFilterByTitle={handleFilterByTitle}
+          onFuzzySearch={handleFuzzySearch}
+        />
+      </header>
+
+      <FavoritesContainer
+        show={shows}
+        favorites={favorites}
+        selectedShowData={selectedShowData}
+        onFavoriteChange={handleFavoriteChange}
+        maxLength={maxLength}
+      />
+
+      <PodcastListContainer
+        shows={shows}
+        selectedShowData={selectedShowData}
+        handleShowClick={handleShowClick}
+        handleSeasonChange={handleSeasonChange}
+        handleFavoriteChange={handleFavoriteChange}
+        maxLength={maxLength}
+      />
+
       {selectedShowData[selectedShow] && (
         <PodcastShow
           podcast={selectedShowData[selectedShow]}
@@ -346,13 +411,14 @@ useEffect(() => {
         />
       )}
 
-<Button className='backButton' onClick={handleBack}><VscArrowSmallLeft/></Button>
-<Button className='' ><VscArrowUp/></Button>
-    </div>
+      <Button className="backButton" onClick={handleBack}>
+        <VscArrowSmallLeft />
+      </Button>
+      <Button className="">
+        <VscArrowUp />
+      </Button>
     </section>
   );
 }
-
-
-};
-export default Preview;
+  }
+export default PreviewContainer;

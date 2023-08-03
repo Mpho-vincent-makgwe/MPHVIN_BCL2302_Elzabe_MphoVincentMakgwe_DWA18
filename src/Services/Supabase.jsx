@@ -16,12 +16,9 @@ const useAuthentication = () => {
     const [loading, setLoading] = useState(true);
     
     useEffect(() => {
-    // Check if a user is already authenticated when the component mounts
     const session = supabase.auth.user;
     setUser(session?.user || null);
     setLoading(false);
-    
-    // Set up an event listener for authentication state changes
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN') {
         setUser(session.user);
@@ -29,8 +26,6 @@ const useAuthentication = () => {
         setUser(null);
         }
     });
-    
-    // Clean up the event listener when the component unmounts
     return () => {
         authListener.unsubscribe;
     };
@@ -42,16 +37,12 @@ const useAuthentication = () => {
         password,
     });
     if (user) {
-        // User successfully signed in
-        // Save user details in local storage
         localStorage.setItem('user', JSON.stringify(user));
       }
-    
     if (error) {
         console.error('Error signing in:', error);
         return false;
     }
-    
     setUser(user);
     return true;
     };

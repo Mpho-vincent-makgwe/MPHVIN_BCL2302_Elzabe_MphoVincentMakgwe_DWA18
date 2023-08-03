@@ -1,13 +1,9 @@
 
 import '../styles/NavBar.css'
 import { VscAccount, VscBroadcast } from "react-icons/vsc";
-import { AppBar } from '@mui/material';
-import Preview from './Previews'
 import {
   MDBBtn,
 } from 'mdb-react-ui-kit';
-
-
 
 
 const Header =  () => {

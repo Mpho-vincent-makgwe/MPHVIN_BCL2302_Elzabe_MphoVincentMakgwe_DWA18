@@ -36,7 +36,32 @@
 }
 
 
-
+/* FavoritesContainer.css */
+.favorites-container {
+    display: flex;
+    flex: 0 0 200px;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin: 0 5px; 
+  }
+  
+  .favorites-carousel {
+    max-width: 600px; /* Set the maximum width of the carousel */
+    overflow: hidden;
+  }
+  
+  .favorites-row {
+    display: flex; /* Display favorites in a horizontal row */
+    overflow-x: auto; /* Enable horizontal scrolling */
+  }
+  
+  /* Custom styles for individual podcast cards */
+  .Container-container {
+    flex: 0 0 200px; /* Adjust the width of individual podcast cards */
+    margin: 0 5px; /* Add some spacing between cards */
+  }
+  
 
 
 

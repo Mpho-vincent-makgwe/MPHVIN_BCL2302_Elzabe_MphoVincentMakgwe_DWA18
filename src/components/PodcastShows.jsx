@@ -18,7 +18,7 @@ const [showDescriptions, setShowDescriptions] = useState({});
 
 useEffect(() => {
   const fetchUserProgress = async () => {
-    const { user } = supabase.auth.currentUser;
+    const { user } = supabase;
     if (user) {
       const { data, error } = await supabase
         .from('user_progress')
@@ -90,12 +90,14 @@ return (
           </Button>
     </Col>
   </Row>
+
 </Container>
           <br/>
 
+          
           {showDescriptions[index] && (
-                <div onClick={() => toggleSeasonDescription(index)}className="new-Overlay">
-                  <Button >Back</Button>
+                <div className="new-Overlay">
+                  <Button onClick={() => toggleSeasonDescription(index)}>Back</Button>
                   <ol key={index.id}>
                     <h4>{season.title}</h4>
                   <img className='season-picture' src={season.image} alt={season.title}/>
