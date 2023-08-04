@@ -20,7 +20,11 @@ import { Carousel } from 'react-responsive-carousel';
 import { useLocalStorageState } from '../Services/Storage';
 
 
-
+/**
+ * PreviewContainer Component renders the main view of the application.
+ * It displays a list of podcasts, allows filtering and sorting, and shows details of a selected podcast.
+ * @returns {JSX.Element} The JSX element representing the PreviewContainer component.
+ */
 
   const PreviewContainer = () => {
 
@@ -149,27 +153,41 @@ useEffect(() => {
 
 
   // Sortingc functions
+   /**
+   * Handle sorting of podcasts in ascending order based on their title.
+   */
   const handleSortAZ = () => {
     const sortedShows = [...shows].sort((a, b) => a.title.localeCompare(b.title));
     setShows(sortedShows);
   };
-
+ /**
+   * Handle sorting of podcasts in descending order based on their title.
+   */
   const handleSortZA = () => {
     const sortedShows = [...shows].sort((a, b) => b.title.localeCompare(a.title));
     setShows(sortedShows);
   };
 
+  /**
+   * Handle sorting of podcasts by date in ascending order.
+   */
   const handleSortByDateAscending = () => {
     const sortedShows = [...shows].sort((a, b) => new Date(a.updated) - new Date(b.updated));
     setShows(sortedShows);
   };
-
+/**
+   * Handle sorting of podcasts by date in descending order.
+   */
   const handleSortByDateDescending = () => {
     const sortedShows = [...shows].sort((a, b) => new Date(b.updated) - new Date(a.updated));
     setShows(sortedShows);
   };
 
   // Filtering function
+   /**
+   * Handle filtering of podcasts by their title.
+   * @param {string} searchQuery - The search query to filter the podcasts by title.
+   */
   const handleFilterByTitle = (searchQuery) => {
     const filteredShows = shows.filter((show) =>
       show.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -178,6 +196,10 @@ useEffect(() => {
   };
 
   // Fuzzy search function
+  /**
+   * Handle fuzzy search of podcasts by title.
+   * @param {string} searchQuery - The search query to perform fuzzy search on podcasts by title.
+   */
   const handleFuzzySearch = (searchQuery) => {
 
     setSearchQuery(searchQuery);
@@ -191,7 +213,10 @@ useEffect(() => {
     setShows(fuzzyMatches);
   }
   };
-
+/**
+   * Handle fuzzy search of podcasts by title.
+   * @param {string} searchQuery - The search query to perform fuzzy search on podcasts by title.
+   */
   const handleBack = () => {
   window.location.reload();
   if (searchQuery) {

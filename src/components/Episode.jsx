@@ -5,7 +5,13 @@ import { VscHeart, VscHeartFilled } from 'react-icons/vsc';
 // import { useLocalStorageState } from '../Services/Storage';
 
 
-
+/**
+ * Episode Component displays details of a single episode, including its title, description, and favorite status.
+ * @param {Object} episode - The episode data to be displayed.
+ * @param {Function} onToggleFavorite - Callback function to toggle the favorite status of the episode.
+ * @param {boolean} isFavourite - The current favorite status of the episode.
+ * @returns {JSX.Element} The JSX element representing the Episode component.
+ */
 const Episode = ({ episode, onToggleFavorite, isFavourite }) => {
 
   const [Favourite, setFavourite] = useState(false);

@@ -7,7 +7,12 @@ import { Container, Row, Col } from 'react-bootstrap';
 import FavoriteEpisodes from './FavoriteEpisodes';
 import { useLocalStorageState } from '../Services/Storage';
 
-
+/**
+ * PodcastShow Component displays details of a selected podcast, including episodes, descriptions, and favorites.
+ * @param {Object} podcast - The selected podcast data to be displayed.
+ * @param {Function} onClose - Callback function to close the podcast details view.
+ * @returns {JSX.Element} The JSX element representing the PodcastShow component.
+ */
 const PodcastShow = ({ podcast, onClose, onPlay }) => {
 
 
@@ -49,12 +54,18 @@ useEffect(() => {
 
 
 
-
+/**
+   * Get the current date and time in a readable format.
+   * @returns {string} The current date and time in a human-readable format.
+   */
 
 const getCurrentDateTime = () => {
   return new Date().toLocaleString(); // Get the current date and time in a readable format
 };
-
+ /**
+   * Handle toggling favorite status of an episode.
+   * @param {string} episodeId - The ID of the episode to toggle favorite status.
+   */
 const handleToggleFavourite = useCallback(
   (episodeId) => {
     const currentDateTime = getCurrentDateTime();
