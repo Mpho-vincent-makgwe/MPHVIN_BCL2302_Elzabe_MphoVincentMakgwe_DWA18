@@ -14,7 +14,6 @@ const AuthForm = ()=>{
         theme="dark"
         showLinks={true}
         providers={['google', 'github', 'facebook', ]}
-        redirectTo="http://http://localhost:5173/"
       />
     )
 }

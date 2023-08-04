@@ -1,5 +1,5 @@
 import '../styles/PodcastShow.css'
-import  { useState, useEffect } from 'react';
+import  { useState, useEffect, useCallback } from 'react';
 import Episode from './Episode';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import { Button } from 'react-bootstrap';
@@ -12,25 +12,68 @@ const PodcastShow = ({ podcast, onClose, onPlay }) => {
 
 
 const { title, image, description, genres, seasons, updated, episode } = podcast;
-const [, setSelectedSeasonIndex] = useState(0);
 const [showDescriptions, setShowDescriptions] = useState({});
-const [favoriteEpisodes, setFavoriteEpisodes] = useState([]);
-
+const [favoriteEpisodes, setFavoriteEpisodes] = useLocalStorageState('favoriteEpisodes', {});
+const [filteredFavoriteEpisodes, setFilteredFavoriteEpisodes] = useState({});
 
 useEffect(() => {
-  const fetchFavoriteEpisodes = async () => {
-    // Simulate fetching favorite episodes data
-    const favoriteEpisodesData = useLocalStorageState([
-{FavoriteEpisodes}
-    ]);
-    setFavoriteEpisodes(favoriteEpisodesData);
-  };
-  const selectedEpisodeId = localStorage.getItem('selectedEpisodeId');
-      if (selectedEpisodeId) {
-        setFavoriteEpisodes(JSON.parse(selectedEpisodeId));
+  if (!podcast) return;
+
+  // Filter episodes by show/podcast id and store them in favoriteEpisodesData
+  const favoriteEpisodesData = {};
+  seasons.forEach((season) => {
+    season.episodes.forEach((episode) => {
+      if (favoriteEpisodes[episode.title]?.isFavorite) {
+        if (!favoriteEpisodesData[podcast.id]) {
+          favoriteEpisodesData[podcast.id] = {};
+        }
+        if (!favoriteEpisodesData[podcast.id][season.id]) {
+          favoriteEpisodesData[podcast.id][season.id] = [];
+        }
+        favoriteEpisodesData[podcast.id][season.id].push(episode);
       }
-  fetchFavoriteEpisodes();
-}, []);
+    });
+  });
+
+  // Update the state with the filtered episodes
+  setFilteredFavoriteEpisodes(favoriteEpisodesData);
+}, [podcast, favoriteEpisodes]);
+
+// Update the favoriteEpisodes state after the useEffect has run and the filteredFavoriteEpisodes is updated
+useEffect(() => {
+  setFavoriteEpisodes((prevFavoriteEpisodes) => ({
+    ...prevFavoriteEpisodes,
+    ...filteredFavoriteEpisodes,
+  }));
+}, [filteredFavoriteEpisodes, setFavoriteEpisodes]);
+
+
+
+
+
+const getCurrentDateTime = () => {
+  return new Date().toLocaleString(); // Get the current date and time in a readable format
+};
+
+const handleToggleFavourite = useCallback(
+  (episodeId) => {
+    const currentDateTime = getCurrentDateTime();
+
+    setFavoriteEpisodes((prevFavoriteEpisodes) => {
+      const updatedFavorites = { ...prevFavoriteEpisodes };
+      updatedFavorites[episodeId] = {
+        isFavorite: !prevFavoriteEpisodes[episodeId]?.isFavorite,
+        favoriteDateTime: !prevFavoriteEpisodes[episodeId]?.isFavorite
+          ? currentDateTime
+          : null,
+      };
+      return updatedFavorites;
+    });
+  },
+  []
+);
+
+
 
 
 
@@ -98,10 +141,12 @@ return (
                     <h4>{season.title}</h4>
                   <img className='season-picture' src={season.image} alt={season.title}/>
                     {season.episodes.map((episode) => (
-                      <li key={episode.id}>
+                      <li key={episode.title}>
                         <Episode
-                          key={episode.id}
+                          key={episode.title}
                           episode={episode}
+                          onToggleFavorite={handleToggleFavourite}
+  isFavourite={favoriteEpisodes[episode.title]?.isFavorite}
                         />
                       </li>
                     ))}
@@ -118,7 +163,8 @@ return (
     <Button className="close-Button" onClick={onClose}>
       Close
     </Button>
-    <FavoriteEpisodes favoriteEpisodes={favoriteEpisodes} />
+    <FavoriteEpisodes favoriteEpisodes={favoriteEpisodes} onToggleFavorite={handleToggleFavourite}
+  isFavourite={favoriteEpisodes[episode]?.isFavorite} />
   </div>
 </Container>
 );

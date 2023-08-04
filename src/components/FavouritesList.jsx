@@ -1,51 +1,94 @@
-import React, { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import { MenuItem, Select } from '@mui/material';
 import '../styles/fav.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import supabase from '../Services/Supabase';
+import {supabase, useAuthentication} from '../Services/Supabase';
+import FavoriteEpisodes from './FavoriteEpisodes';
+
 
 const FavoritesList = ({ show, favorites, selectedShowData }) => {
   const [selectedFavorite, setSelectedFavorite] = useState(null);
-  const [favoritesSortOrder, setFavoritesSortOrder] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [favoritesSortOrder, setFavoritesSortOrder] = useState(''); // 'asc' or 'desc'
+
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
-  const [selectedOption, setSelectedOption] = React.useState('');
+  const [selectedOption, setSelectedOption] = useState('');
+
+  const { user } = useAuthentication();
 
   const fetchUserFavorites = async () => {
-    const { user } = supabase;
     if (user) {
-    //   const favoritesData = await fetchFavorites(user.id);
-      // Process and set the favoritesData state
+      const { data, error } = await supabase
+        .from('Favourites')
+        .select('show_id, episode')
+        .eq('id', user.id);
+
+      if (!error) {
+        // Process and set the favorites state
+        const userFavorites = data.map((item) => item.episode);
+        setSelectedFavorite(userFavorites);
+      }
     }
   };
 
 
+const updateUserFavorites = async (favoriteId) => {
+    if (user) {
+      const existingFavorite = favorites.includes(favoriteId);
+
+      if (existingFavorite) {
+        // If it's already a favorite, remove it
+        await supabase
+          .from('Favourites')
+          .delete()
+          .eq('id', user.id)
+          .eq('episode', favoriteId);
+      } else {
+        await supabase.from('Favourites').insert([
+          {
+            id: user.id,
+            episode: favoriteId,
+            added_datetime: new Date().toISOString(),
+          },
+        ]);
+      }
+      fetchUserFavorites();
+    }
+  };
+
   useEffect(() => {
-    fetchUserFavorites();
-  }, [])
+    // fetchUserFavorites();
+    updateUserFavorites()
+  }, [user]);
 
-
-
-  // Helper function to sort favorites by show titles
   const handleSortFavoritesByTitle = (order) => {
     setFavoritesSortOrder(order);
     const sortedFavorites = [...favorites].sort((a, b) =>
       order === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
     );
-    // Update the favorites state
-    setFavorites(sortedFavorites);
+    setSelectedFavorite(sortedFavorites);
   };
-
-  // Helper function to sort show by date updated
+  
   const handleSortFavoritesByDate = (order) => {
     setFavoritesSortOrder(order);
     const sortedFavorites = [...favorites].sort((a, b) =>
       order === 'asc' ? new Date(a.updated) - new Date(b.updated) : new Date(b.updated) - new Date(a.updated)
     );
-    // Update the favorites state
-    setFavorites(sortedFavorites);
+    setSelectedFavorite(sortedFavorites);
   };
+
+const handleFilterByTitle = (searchQuery) => {
+  setSearchQuery(searchQuery);
+  const filteredFavorites = favorites.filter((favorite) =>
+    favorite.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  setSelectedFavorite(filteredFavorites);
+};
+  
+
+  
 const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
     // Handle the selected option here
@@ -63,19 +106,26 @@ return (
 <div className="favorites">
     <h2>Favorites</h2>
     <Dropdown className="favorites">
-<Select
-value={selectedOption}
-onChange={handleSelectChange}
-variant="outlined"
-label="Select an option"
->
-<MenuItem value="option1"><Button onClick={() => handleSortFavoritesByTitle('asc')}>Sort by Title (A-Z)</Button></MenuItem>
-<MenuItem value="option2"><Button onClick={() => handleSortFavoritesByTitle('desc')}>Sort by Title (Z-A)</Button></MenuItem>
-<MenuItem value="option3"><Button onClick={() => handleSortFavoritesByDate('asc')}>Sort by Date (Asc)</Button></MenuItem>
-<MenuItem value="option4"><Button onClick={() => handleSortFavoritesByDate('desc')}>Sort by Date (Desc)</Button></MenuItem>
-</Select>
-
+  <Select
+    value={favoritesSortOrder}
+    onChange={(event) => handleSortFavoritesByTitle(event.target.value)}
+    variant="outlined"
+    label="Sort by Title"
+  >
+    <MenuItem value="asc">
+      <Button>Sort by Title (A-Z)</Button>
+    </MenuItem>
+    <MenuItem value="desc">
+      <Button>Sort by Title (Z-A)</Button>
+    </MenuItem>
+  </Select>
 </Dropdown>
+<input
+  type="text"
+  placeholder="Search by title"
+  value={searchQuery}
+  onChange={(event) => handleFilterByTitle(event.target.value)}
+/>
     {/* ... Rest of the sorting buttons ... */}
     <div className="slider-container">
     <div className="slider-content" >
@@ -97,12 +147,17 @@ label="Select an option"
                 )}
                 <p>Release Date: {new Date(favoriteShow.updated).toLocaleDateString()}</p>
               </div>
+              
       );
     })
   ) : (
     <p>No favorites yet.</p>
   )}
   </div>
+  <FavoriteEpisodes
+        favoriteEpisodes={selectedShowData[show.id]?.favoriteEpisodes || {}}
+       
+      />
 </div>
 
 </div>

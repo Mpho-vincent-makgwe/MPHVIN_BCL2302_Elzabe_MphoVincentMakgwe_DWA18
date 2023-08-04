@@ -11,7 +11,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 
-const useAuthentication = () => {
+export const useAuthentication = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     
@@ -76,4 +76,4 @@ const useAuthentication = () => {
     };
     };
     
-    export default useAuthentication;
+   

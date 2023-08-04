@@ -8,7 +8,7 @@ import PodcastShow from './PodcastShows';
 import '../styles/Preview.css';
 import Fuse from 'fuse.js';
 import AuthForm from '../Authentication/Auth';
-import useAuthentication from '../Services/Supabase';
+import {useAuthentication} from '../Services/Supabase';
 import { VscArrowSmallLeft, VscArrowUp } from "react-icons/vsc";
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import { Button,Row, Col  } from 'react-bootstrap';
