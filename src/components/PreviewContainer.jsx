@@ -22,10 +22,6 @@ import { useLocalStorageState } from '../Services/Storage';
 
 
 
-
-
-
-
   const PreviewContainer = () => {
 
   const [loading, setLoading] = useState(true);
@@ -152,7 +148,7 @@ useEffect(() => {
 
 
 
-  // Sorting functions
+  // Sortingc functions
   const handleSortAZ = () => {
     const sortedShows = [...shows].sort((a, b) => a.title.localeCompare(b.title));
     setShows(sortedShows);
@@ -327,6 +323,11 @@ useEffect(() => {
           selectedShowData={selectedShowData}
           onFavoriteChange={onFavoriteChange}
           maxLength={maxLength}
+          onClick={() => onShowClick(show.id)}
+          podcast={selectedShowData[show.id]}
+          onClose={() => onShowClick(null)}
+          onSeasonChange={handleSeasonChange}
+          selectedSeasonIndex={selectedSeasonIndex}
         /></div>
 
         </Carousel>

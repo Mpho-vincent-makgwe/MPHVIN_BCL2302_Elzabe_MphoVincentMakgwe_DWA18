@@ -13,12 +13,8 @@ const Episode = ({ episode }) => {
 
 
   useEffect(() => {
-    const progress = localStorage.getItem(`progress_${episode.id}`);
-    if (progress) {
-      const audioElement = document.getElementById(`audio_${episode.id}`);
-      audioElement.currentTime = Number(progress);
-    }
-  }, [episode]);
+    setIsFavourite(selectedEpisodeId.includes(episode));
+  }, [episode, selectedEpisodeId]);
 
   const handlePlayEpisode = async (episode) => {
     const audioElement = document.getElementById(`audio_${episode.id}`);
@@ -56,85 +52,16 @@ const Episode = ({ episode }) => {
   };
 
 
-  // const addToFavorites = async (user_id, episode_id) => {
-  //   const { data, error } = await supabase.from('Favorites').insert({
-  //     user_id: user_id,
-  //     episode: episode_id,
-  //     added_datetime: new Date().toISOString(),
-  //   });
-  // };
-
-
-  // const fetchFavorites = async (user_id) => {
-  //   const { data, error } = await supabase
-  //     .from('favorites')
-  //     .select('*')
-  //     .eq('user_id', user_id);
-  //   // Handle any errors
-  //   return data;
-  // };
-
-
-  // const removeFromFavorites = async (user_id, episode_id) => {
-  //   const { data, error } = await supabase
-  //     .from('favorites')
-  //     .delete()
-  //     .eq('user_id', user_id)
-  //     .eq('episode_id', episode_id);
-  //   // Handle any errors
-  // };
-
-  // const getCurrentDateTime = () => {
-  //   return new Date().toLocaleString(); // Get the current date and time in a readable format
-  // };
-
-  // const handleToggleFavourite  = () => {
-  //   // const currentDateTime = getCurrentDateTime();
-  //   setIsFavourite((prevIsFavourite) => {
-  //     const updatedIsFavourite = !prevIsFavourite;
-
-  //     setSelectedEpisodeId((prevSelectedEpisodes) => {
-  //       const updatedSelectedEpisodes = {
-  //         ...prevSelectedEpisodes,
-  //         [episode.id]: updatedIsFavourite,
-  //       };
-  //       localStorage.setItem('selectedEpisodeId', JSON.stringify(updatedSelectedEpisodes));
-  //       addToFavorites(user.id, episode.id, updatedIsFavourite);
-  //       return updatedSelectedEpisodes;
-  //     });
-
-  //     return updatedIsFavourite;
-  //   });
-  // };
-  // const groupEpisodesByShowAndSeason = (episodes) => {
-  //   const groupedEpisodes = episodes.reduce((acc, episode) => {
-  //     const { showId, seasonId } = episode; 
-
-  //     if (!acc[showId]) acc[showId] = {};
-  //     if (!acc[showId][seasonId]) acc[showId][seasonId] = [];
-  //     acc[showId][seasonId].push(episode);
-  //     return acc;
-  //   }, {});
-  //   return groupedEpisodes;
-  // };
-
-  // ... Rest of the code ...
-
-// const groupEpisodesByShowAndSeason = (episodes) => {
-//     const groupedEpisodes = episodes.reduce((acc, episode) => {
-//       const { showId, seasonId } = episode; // Replace with actual properties for show and season IDs
-//       if (!acc[showId]) acc[showId] = {};
-//       if (!acc[showId][seasonId]) acc[showId][seasonId] = [];
-//       acc[showId][seasonId].push(episode);
-//       return acc;
-//     }, {});
-//     return groupedEpisodes;
-//   };
-  
-const handleToggleFavourite =  () => {
+const handleToggleFavourite = useCallback(() => {
   setIsFavourite((prevIsFavourite) => !prevIsFavourite);
-  setSelectedEpisodeId(episode)
-};
+  setSelectedEpisodeId((prevSelectedEpisodes) => {
+    const updatedSelectedEpisodes = prevSelectedEpisodes.includes(episode)
+      ? prevSelectedEpisodes.filter((id) => id !== episode) // Remove from favorites
+      : [...prevSelectedEpisodes, episode]; // Add to favorites
+
+    return updatedSelectedEpisodes;
+  });
+}, [episode, setSelectedEpisodeId]);
 
 
   return (
@@ -143,8 +70,8 @@ const handleToggleFavourite =  () => {
       <p>{episode.description}</p>
       <p>Release Date: {new Date(episode.updated).toLocaleDateString()}</p>
       
-      <audio onClick={handlePlayEpisode} className='audio' controls>
-        <source key={episode.episode} src={episode.file} />
+      <audio className='audio' controls>
+        <source onLoad={handlePlayEpisode} key={episode.episode} src={episode.file} />
         Your browser does not support the audio element.
       </audio>
       {isFavourite ? (

@@ -1,10 +1,11 @@
 import '../styles/PodcastShow.css'
 import  { useState, useEffect } from 'react';
 import Episode from './Episode';
-import supabase from '../Services/Supabase'
 import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import { Button } from 'react-bootstrap';
 import { Container, Row, Col } from 'react-bootstrap';
+import FavoriteEpisodes from './FavoriteEpisodes';
+import { useLocalStorageState } from '../Services/Storage';
 
 
 const PodcastShow = ({ podcast, onClose, onPlay }) => {
@@ -13,30 +14,25 @@ const PodcastShow = ({ podcast, onClose, onPlay }) => {
 const { title, image, description, genres, seasons, updated, episode } = podcast;
 const [, setSelectedSeasonIndex] = useState(0);
 const [showDescriptions, setShowDescriptions] = useState({});
-
+const [favoriteEpisodes, setFavoriteEpisodes] = useState([]);
 
 
 useEffect(() => {
-  const fetchUserProgress = async () => {
-    const { user } = supabase;
-    if (user) {
-      const { data, error } = await supabase
-        .from('user_progress')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('podcast_id', podcast.id)
-        .single(); // Assuming each user can have only one progress entry per podcast
-
-      if (data) {
-        // Set the progress time for the current episode
-        const currentEpisodeProgress = data.progress_time || 0;
-        // Set the progress time for other episodes as needed
-      }
-    }
+  const fetchFavoriteEpisodes = async () => {
+    // Simulate fetching favorite episodes data
+    const favoriteEpisodesData = useLocalStorageState([
+{FavoriteEpisodes}
+    ]);
+    setFavoriteEpisodes(favoriteEpisodesData);
   };
+  const selectedEpisodeId = localStorage.getItem('selectedEpisodeId');
+      if (selectedEpisodeId) {
+        setFavoriteEpisodes(JSON.parse(selectedEpisodeId));
+      }
+  fetchFavoriteEpisodes();
+}, []);
 
-  fetchUserProgress();
-}, [podcast]);
+
 
 if (!podcast) {
   return null;
@@ -106,7 +102,7 @@ return (
                         <Episode
                           key={episode.id}
                           episode={episode}
-                                                  />
+                        />
                       </li>
                     ))}
                   </ol>
@@ -118,9 +114,11 @@ return (
     <p>
       Last Updated: {new Date(updated).toLocaleDateString()}
     </p>
+    
     <Button className="close-Button" onClick={onClose}>
       Close
     </Button>
+    <FavoriteEpisodes favoriteEpisodes={favoriteEpisodes} />
   </div>
 </Container>
 );

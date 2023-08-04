@@ -27,51 +27,37 @@ const FavoritesList = ({ show, favorites, selectedShowData }) => {
 
 
 
-// Helper function to sort favorites by show titles
-const handleSortFavoritesByTitle = (order) => {
-setFavoritesSortOrder(order);
-const sortedFavorites = [...favorites].sort((a, b) =>
-order === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
-);
-setFavorites(sortedFavorites);
-};
+  // Helper function to sort favorites by show titles
+  const handleSortFavoritesByTitle = (order) => {
+    setFavoritesSortOrder(order);
+    const sortedFavorites = [...favorites].sort((a, b) =>
+      order === 'asc' ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title)
+    );
+    // Update the favorites state
+    setFavorites(sortedFavorites);
+  };
 
-// Helper function to sort show by date updated
-const handleSortFavoritesByDate = (order) => {
-setFavoritesSortOrder(order);
-const sortedFavorites = [...favorites].sort((a, b) =>
-order === 'asc'
-? new Date(a.updated) - new Date(b.updated)
-: new Date(b.updated) - new Date(a.updated)
-);
-setFavorites(sortedFavorites);
-};
+  // Helper function to sort show by date updated
+  const handleSortFavoritesByDate = (order) => {
+    setFavoritesSortOrder(order);
+    const sortedFavorites = [...favorites].sort((a, b) =>
+      order === 'asc' ? new Date(a.updated) - new Date(b.updated) : new Date(b.updated) - new Date(a.updated)
+    );
+    // Update the favorites state
+    setFavorites(sortedFavorites);
+  };
 const handleSelectChange = (event) => {
     setSelectedOption(event.target.value);
     // Handle the selected option here
     console.log(`Selected option: ${event.target.value}`);
   };
 
-//   const groupEpisodesByShowAndSeason = (episodes) => {
-//     const groupedEpisodes = episodes.reduce((acc, episode) => {
-//       const { showId, seasonId } = selectedShowData; 
-//       if (!acc[showId]) acc[showId] = {};
-//       if (!acc[showId][seasonId]) acc[showId][seasonId] = [];
-//       acc[showId][seasonId].push(episode);
-//       return acc;
-//     }, {});
-//     return groupedEpisodes;
-//   };
-
   const maxLength = 15; // Adjust the number to your desired length
-
 
   const handleFavoriteClick = (favoriteId) => {
     setSelectedFavorite(favoriteId);
     console.log('clicked')
   };
-
-
 
 return (
 <div className="favorites">
