@@ -42,7 +42,7 @@ useEffect(() => {
 
   // Update the state with the filtered episodes
   setFilteredFavoriteEpisodes(favoriteEpisodesData);
-}, [podcast, favoriteEpisodes]);
+}, [podcast]);
 
 // Update the favoriteEpisodes state after the useEffect has run and the filteredFavoriteEpisodes is updated
 useEffect(() => {
@@ -83,10 +83,6 @@ const handleToggleFavourite = useCallback(
   },
   []
 );
-
-
-
-
 
 if (!podcast) {
   return null;
@@ -174,8 +170,13 @@ return (
     <Button className="close-Button" onClick={onClose}>
       Close
     </Button>
-    <FavoriteEpisodes favoriteEpisodes={favoriteEpisodes} onToggleFavorite={handleToggleFavourite}
-  isFavourite={favoriteEpisodes[episode]?.isFavorite} />
+    {Object.entries(podcast.episodes).map((episode) => (
+    <FavoriteEpisodes 
+    key={episode.title}
+    favoriteEpisodes={favoriteEpisodes} 
+    onToggleFavorite={handleToggleFavourite}
+    isFavourite={favoriteEpisodes[episode.title]?.isFavorite} />
+    ))}
   </div>
 </Container>
 );

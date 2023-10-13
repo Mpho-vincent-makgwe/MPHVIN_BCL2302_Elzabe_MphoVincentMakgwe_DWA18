@@ -229,7 +229,6 @@ useEffect(() => {
   }
        // Reload the page to go back to its original state
 
-
   };
 
 
@@ -399,6 +398,9 @@ useEffect(() => {
 
   return (
     <section>
+
+
+
       <header className="header">
         <Header />
 
@@ -443,6 +445,9 @@ useEffect(() => {
       <Button className="">
         <VscArrowUp />
       </Button>
+
+
+      
     </section>
   );
 }

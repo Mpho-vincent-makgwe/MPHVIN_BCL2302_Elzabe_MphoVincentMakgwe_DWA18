@@ -5,8 +5,6 @@ import '../styles/fav.css';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import {supabase, useAuthentication} from '../Services/Supabase';
-import FavoriteEpisodes from './FavoriteEpisodes';
-
 
 const FavoritesList = ({ show, favorites, selectedShowData }) => {
   const [selectedFavorite, setSelectedFavorite] = useState(null);
@@ -22,8 +20,7 @@ const FavoritesList = ({ show, favorites, selectedShowData }) => {
     if (user) {
       const { data, error } = await supabase
         .from('Favourites')
-        .select('show_id, episode')
-        .eq('id', user.id);
+        .insert([selectedFavorite])
 
       if (!error) {
         // Process and set the favorites state
@@ -154,10 +151,6 @@ return (
     <p>No favorites yet.</p>
   )}
   </div>
-  <FavoriteEpisodes
-        favoriteEpisodes={selectedShowData[show.id]?.favoriteEpisodes || {}}
-       
-      />
 </div>
 
 </div>
